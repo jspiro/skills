@@ -50,6 +50,15 @@ Check how signing is set up before assuming anything:
   rewrite already-pushed/shared history beyond a `--force-with-lease` on the
   feature branch.
 
+## After pushing to a PR
+
+A push is not the end of the work: every push (initial or follow-up)
+triggers a fresh review round from human or bot reviewers. Own it — stay
+proactive and persistent, addressing findings until the PR is clean or you
+hit a roadblock only the user can clear, then alert them with the state.
+Never let PR work drop silently. Full lifecycle discipline (latency checks,
+verify-by-artifact, recurring watch loops): the `background-tasks` skill.
+
 ## Identity (don't override)
 
 - Author/committer must be `git config user.email`. Verify with `git var GIT_AUTHOR_IDENT`.
