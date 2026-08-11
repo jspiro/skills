@@ -43,11 +43,11 @@ Interview me in detail using the AskUserQuestion tool.
 Technical implementation, UI & UX, concerns, tradeoffs, etc. — be very
 in-depth and continue interviewing me continually until it's complete.
 
-Then run /to-prd and /to-issues to generate the plan, and /tdd before
+Then run /to-spec and /to-tickets to generate the plan, and /tdd before
 starting work.
 
-After completing work, run /review and /improve-codebase-architecture to
-look for opportunities to tighten up the code before pushing to a PR.
+After completing work, run /code-review and /improve-codebase-architecture
+to look for opportunities to tighten up the code before pushing to a PR.
 
 For any background work you start or wait on (subagents, CI runs, deploys,
 PR reviewer bots, cron jobs), follow the `background-tasks` skill: own the

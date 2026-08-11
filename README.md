@@ -18,15 +18,11 @@ copy it, keep what fits, delete what doesn't.
 
 ## Prerequisites
 
-My CLAUDE.md references skills from
+My CLAUDE.md references these skills from
 [mattpocock/skills](https://github.com/mattpocock/skills)
-(`npx skills@latest add mattpocock/skills`):
-
-- Current upstream: `grill-me`, `grill-with-docs`, `tdd`, `triage`,
-  `improve-codebase-architecture`.
-- From older versions of his repo (I still run the old copies): `to-prd`,
-  `to-issues`, `review`. Nearest current equivalents: `to-spec`,
-  `to-tickets`, `code-review`.
+(`npx skills@latest add mattpocock/skills`): `grill-me`, `grill-with-docs`,
+`to-spec`, `to-tickets`, `tdd`, `code-review`,
+`improve-codebase-architecture`, and `triage`.
 
 The skills in this repo only reference each other (`git-prefs` hands off to
 `background-tasks`), with one aside: `internalize` mentions

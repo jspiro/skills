@@ -7,7 +7,10 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 
 ## Workflow
 
-- After a task is done, suggest committing the work.
+- After a task is done, suggest committing the work — suggest, don't do.
+  Commits, pushes, and merges run only on explicit approval, and approval
+  covers that action once, not the rest of the session. In particular:
+  editing an installed skill never implies committing or pushing it.
 - Stay on feature branches; never commit on `main`. Return to `main` after merge.
 - Pull with rebase (`git pull --rebase`).
 - Force-push: `--force-with-lease` only, on feature branches. Never plain `--force`. Never to `main`.
@@ -18,6 +21,13 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 - Commit message: clear descriptive subject, body lines for detail when it helps. No Conventional Commits prefixes (`feat:` / `fix:` / etc.).
 - Run `git status` first. Unexpected staged changes → stop, surface to the user.
 - Stage paths individually. No `git add -A` / `git add .`.
+- Before staging a file, review its full diff (`git diff <file>`) and decide
+  whether parts should stay unstaged. Local-only edits (personal notes,
+  machine-specific tweaks) are legitimate and may live in the working tree
+  indefinitely — an unclean tree is not a mess to tidy. When a file mixes
+  committable and local-only changes, split them: write the committable
+  version, stage and commit it, then restore the local-only edits to the
+  working tree.
 - Don't `git add` files you didn't generate.
 - Untracked files that shouldn't be tracked: propose a `.gitignore` entry only if the file is project-relevant (build artifact, env template, anything other devs would also generate). Personal files (editor noise, local notes) — leave alone; they belong in `~/.gitignore_global` or nowhere.
 - Empty commits OK when intentional (e.g., CI trigger). Never use `wip`/`WIP` subjects.

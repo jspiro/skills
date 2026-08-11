@@ -23,7 +23,8 @@ manifests, or release automation. Keep it lightweight.
   write the committable version, stage and commit it, then restore the
   personal edits to the working tree.
 - `~/.claude/skills/<name>` entries for these skills are symlinks into this
-  clone — editing a skill here is live immediately; commit and push after
-  editing (diff-reviewed, per above).
+  clone — editing a skill here is live immediately. After editing, propose
+  a commit+push (diff-reviewed, per above) and wait for approval; never
+  run them unasked.
 - Keep committed content generic (no personal emails, hosts, or company
   references); personal detail may live in the working tree uncommitted.
