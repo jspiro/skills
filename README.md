@@ -18,16 +18,23 @@ copy it, keep what fits, delete what doesn't.
 
 ## Prerequisites
 
-My CLAUDE.md references these skills from
-[mattpocock/skills](https://github.com/mattpocock/skills)
-(`npx skills@latest add mattpocock/skills`): `grill-me`, `grill-with-docs`,
-`to-spec`, `to-tickets`, `tdd`, `code-review`,
-`improve-codebase-architecture`, and `triage`.
+Using the CLAUDE.md below as-is? Install everything it references:
 
-The skills in this repo only reference each other (`git-prefs` hands off to
-`background-tasks`), with one aside: `internalize` mentions
-`revise-claude-md`, which ships with Claude Code's `claude-md-management`
-plugin. Everything degrades gracefully if a referenced skill is absent.
+```bash
+# The skills in this repo (git-prefs hands off to background-tasks — install together)
+npx skills@latest add jspiro/skills \
+  --skill internalize --skill git-prefs --skill background-tasks -g
+
+# The mattpocock/skills my CLAUDE.md references
+npx skills@latest add mattpocock/skills \
+  --skill grill-me --skill grill-with-docs --skill to-spec --skill to-tickets \
+  --skill tdd --skill code-review --skill improve-codebase-architecture \
+  --skill triage -g
+```
+
+Skip any you won't use — but then delete the CLAUDE.md lines that mention
+them. A pointer to a missing skill doesn't break anything; it's a silent
+no-op, which means you'd believe a guardrail exists that doesn't.
 
 ## The skills
 
