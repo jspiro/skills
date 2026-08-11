@@ -1,6 +1,6 @@
 ---
 name: internalize
-description: Turn user corrective feedback into a durable CLAUDE.md rule, then address the feedback. Use when the user corrects how Claude worked ("no, I wanted...", "don't do that", "that's not what I asked", "next time do X"), gives a preference meant to apply going forward, or invokes /internalize. Not for one-off task tweaks with no future relevance, and not for session-summary CLAUDE.md maintenance (use revise-claude-md for that).
+description: Turn user corrective feedback into a durable rule — in the right CLAUDE.md tier, or a skill with a CLAUDE.md pointer when the lesson is big or situational — then address the feedback. Use when the user corrects how Claude worked ("no, I wanted...", "don't do that", "that's not what I asked", "next time do X"), gives a preference meant to apply going forward, or invokes /internalize. Not for one-off task tweaks with no future relevance, and not for session-summary CLAUDE.md maintenance (use revise-claude-md for that).
 ---
 
 # Internalize Feedback
@@ -47,6 +47,14 @@ stated right. A wrong generalization recorded is worse than none.
 | Personal preference, workflow, communication style — true in any repo | `~/.claude/CLAUDE.md` |
 | This repo's conventions, architecture, process | `<repo>/CLAUDE.md` |
 | One domain within the repo (tests, prompts, e2e, ...) that has its own CLAUDE.md | that subdirectory's `CLAUDE.md` |
+| Substantial or situational knowledge — a procedure, a rule set, anything over ~10 lines, or knowledge only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
+
+CLAUDE.md lines load into every conversation; a skill loads only when
+triggered. Short, always-relevant rules stay in CLAUDE.md; bulk and
+situational scope go to a skill — but never exile a two-line rule to a skill,
+where it won't be loaded at the moment it applies. When the destination is a
+skill, the pointer line is what makes it reachable: name the trigger
+condition in it ("for any git work, follow the `git-prefs` skill").
 
 If genuinely ambiguous (e.g. "is this preference personal or team-wide?"),
 include a destination question in the step-1 interview instead of guessing.
