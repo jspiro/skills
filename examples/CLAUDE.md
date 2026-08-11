@@ -2,13 +2,17 @@
 A copy of my real global CLAUDE.md (~/.claude/CLAUDE.md), lightly sanitized.
 Not installable — copy it, keep what fits, delete what doesn't.
 Slash commands like /grill-me, /tdd, /triage refer to skills from
-https://github.com/mattpocock/skills; `git-prefs` and `background-tasks`
-are in this repo.
+https://github.com/mattpocock/skills; `internalize`, `git-prefs`, and
+`background-tasks` are in this repo.
 -->
 
 # General
 
 Make plans and responses concise and direct, but don't sacrifice grammar.
+
+When I correct how you worked, or state a preference meant to apply going
+forward, use the `internalize` skill to persist the lesson (I may also
+invoke /internalize directly, optionally with the feedback inline).
 
 When adding knowledge to a CLAUDE.md that is substantial (over ~10 lines, a
 procedure, a rule set) or situational (only some conversations need it),
