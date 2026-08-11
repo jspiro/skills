@@ -49,6 +49,26 @@ configured and working, or configured with the signer locked (e.g. a locked
 the rules to your own taste — it's a template for *your* preferences as much
 as a skill.
 
+### [`background-tasks`](./skills/background-tasks/SKILL.md)
+
+**The problem**: agents start background work — subagents, CI runs, deploys,
+PR reviewer bots — then trust the completion notification, or worse, walk
+away. Work gets dropped silently, and "done" gets reported while a review
+round sits unread.
+
+**What it does**: makes the agent own the full lifecycle of anything it
+starts or waits on. Never trust, always verify: status comes from artifacts
+(`gh run list`, process lists, file mtimes), not notifications. ETA
+discipline: schedule a fallback check at ~2× any ETA, and recurring watch
+loops — not one-shots — when the wait spans other work. Includes the PR
+review loop as a worked case: learn the reviewer's latency, check at 1×/2×,
+read summary and inline comments, address every finding, loop until clean
+or genuinely blocked — then alert with state, not silence.
+
+**How it runs**: on its own whenever background work starts or the agent is
+about to report monitored work as done or still running. `git-prefs` hands
+off to it after any PR push.
+
 ## A starting-point global CLAUDE.md
 
 A lot of people don't know where to start with their global
