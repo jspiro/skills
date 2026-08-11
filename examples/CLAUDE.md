@@ -1,6 +1,8 @@
 <!--
-A copy of my real global CLAUDE.md (~/.claude/CLAUDE.md), lightly sanitized.
+My live global CLAUDE.md — ~/.claude/CLAUDE.md is a symlink to this file.
 Not installable — copy it, keep what fits, delete what doesn't.
+The working tree may carry personal, intentionally-uncommitted edits to
+this file; diffs are reviewed before anything is staged or pushed.
 Slash commands like /grill-me, /tdd, /triage refer to skills from
 https://github.com/mattpocock/skills; `internalize`, `git-prefs`, and
 `background-tasks` are in this repo.

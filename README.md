@@ -72,10 +72,10 @@ off to it after any PR push.
 ## A starting-point global CLAUDE.md
 
 A lot of people don't know where to start with their global
-`~/.claude/CLAUDE.md`. [`examples/CLAUDE.md`](./examples/CLAUDE.md) is a
-copy of mine, lightly sanitized — planning flow, PR review loop,
-background-work verification, coding and linting rules, and the
-skill-pointer pattern both skills above rely on. It's not installable;
+`~/.claude/CLAUDE.md`. [`examples/CLAUDE.md`](./examples/CLAUDE.md) is my
+actual global CLAUDE.md — my `~/.claude/CLAUDE.md` is a symlink to it, so
+it's always current: planning flow, coding and linting rules, and the
+skill-pointer pattern the skills above rely on. It's not installable;
 copy it, keep what fits, delete what doesn't.
 
 ## Install
