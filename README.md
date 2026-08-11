@@ -7,12 +7,47 @@ Due credit and thanks to [Matt Pocock](https://github.com/mattpocock) for
 the original collection and distribution approach. His skills aren't
 packaged here — get them from the source.
 
-## Skills
+## The skills
 
-| Skill | What it does |
-| --- | --- |
-| [`internalize`](./skills/internalize/SKILL.md) | Turn corrective feedback into a durable CLAUDE.md rule — reflect the lesson back, iterate until it's right, persist it in the correct CLAUDE.md tier, red-team the written rule, then fix the work. |
-| [`git-prefs`](./skills/git-prefs/SKILL.md) | Git preferences: branch discipline, individual staging, signing-aware workflow (configured, unconfigured, or signer locked), identity guardrails. Edit to taste. |
+### [`internalize`](./skills/internalize/SKILL.md)
+
+**The problem**: you correct the agent — "that's not what I wanted, do it
+this way" — and it apologizes, fixes the one instance, and makes the same
+mistake next session. The feedback never lands anywhere durable.
+
+**What it does**: turns corrective feedback into a persisted rule. It
+reflects the lesson back in its own words, iterates until you confirm it
+learned the right thing, writes the rule to the correct CLAUDE.md tier
+(global for personal preferences, project or subdirectory for repo
+conventions), red-teams the written rule — would it actually fire? could it
+backfire? — then fixes the original work and summarizes what it learned.
+
+**How it runs**: on its own when it recognizes corrective feedback ("no, I
+wanted...", "next time do X"), or explicitly — invoke `/internalize` after
+giving feedback, or hand it the feedback inline:
+
+```
+/internalize stop putting summary tables in every response
+```
+
+### [`git-prefs`](./skills/git-prefs/SKILL.md)
+
+**The problem**: everyone has git preferences — branch discipline, how to
+stage, what commit messages look like, how signing is set up. Pasting all of
+that into CLAUDE.md taxes every conversation's context window, including the
+many that never touch git.
+
+**What it does**: breaks the git knowledge out into a skill that loads only
+when git work actually happens. One CLAUDE.md line ("for any git work,
+follow the `git-prefs` skill") replaces a page of rules. Mine covers branch
+and force-push discipline, individual staging, message style, identity
+guardrails, and a signing workflow that handles signing being unconfigured,
+configured and working, or configured with the signer locked (e.g. a locked
+1Password vault) — without ever blocking work.
+
+**How to use it**: install, add the one-liner to your CLAUDE.md, then edit
+the rules to your own taste — it's a template for *your* preferences as much
+as a skill.
 
 ## Install
 
