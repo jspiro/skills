@@ -49,6 +49,15 @@ configured and working, or configured with the signer locked (e.g. a locked
 the rules to your own taste — it's a template for *your* preferences as much
 as a skill.
 
+## A starting-point global CLAUDE.md
+
+A lot of people don't know where to start with their global
+`~/.claude/CLAUDE.md`. [`examples/CLAUDE.md`](./examples/CLAUDE.md) is a
+copy of mine, lightly sanitized — planning flow, PR review loop,
+background-work verification, coding and linting rules, and the
+skill-pointer pattern both skills above rely on. It's not installable;
+copy it, keep what fits, delete what doesn't.
+
 ## Install
 
 With the [skills CLI](https://skills.sh) (works with Claude Code, Codex,
