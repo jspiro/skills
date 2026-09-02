@@ -7,7 +7,7 @@ description: Turn user corrective feedback into a durable rule — in the right 
 
 When the user says you did something differently than they wanted, extract the
 right lesson, persist it where it will actually prevent a repeat, then fix the
-work. Order: **reflect → iterate → persist → red-team → summarize → fix**.
+work. Order: **Q&A → propose → persist → red-team → summarize → fix**.
 
 ## 0. Identify the feedback
 
@@ -18,27 +18,38 @@ work. Order: **reflect → iterate → persist → red-team → summarize → fi
   recent correction. If it's ambiguous which of the last few messages is the
   lesson, ask — don't guess.
 
-## 1. Reflect & iterate — learn the RIGHT lesson
+## 1. Q&A — learn the user's take BEFORE proposing anything
 
-Lead with a reflection IN YOUR OWN WORDS, in prose — not a questionnaire:
+Do not draft a rule yet. Put YOUR read of what happened in front of the
+user as a question and let them correct it. Cover, in order:
 
-1. **How you understood the concern** — what you did, why it fell short of
-   what they wanted, and what you believe the underlying principle is (not
-   just this instance).
-2. **What you think would address it** — the behavior change, stated as the
-   rule you'd write.
+- **Your read of what you did wrong**, as the question's options:
+  single-select (radio) when there are competing interpretations of one
+  act; multi-select when the failure is several things conflated or
+  decomposes into parts. Always include the user's own framing if they
+  gave one.
+- **Scope and boundaries**: where the lesson applies and where it must NOT
+  fire.
+- **Whether a rule is warranted at all** — a one-off may not need
+  persisting.
 
-Then let the user react. Use AskUserQuestion only where a genuine fork needs
-deciding (e.g. scope: always vs. this project only; destination when
-ambiguous; boundaries: when the rule should NOT apply) — never as a substitute
-for the prose reflection. If the correction contradicts an existing CLAUDE.md
-rule, surface the conflict and ask which wins.
+Present your read in the message text first, then call AskUserQuestion to
+collect the answer. Option `preview` blocks are for single-select questions
+whose options carry genuinely different texts to compare (variant A vs B);
+never make a preview the only place a single proposal's text appears — a
+question about text the user cannot see is the failure this phase
+prevents. Iterate until the user confirms your read matches theirs.
 
-**Iterate**: restate the revised understanding after each user correction and
-check again. Do not persist anything until the user confirms the lesson is
-stated right. A wrong generalization recorded is worse than none.
+## 2. Propose — state the rule
 
-## 2. Persist — write the rule
+Only now restate the lesson as the rule you'd write: show the exact text in
+the message body (a fenced block), name the destination, then collect
+approve/revise with AskUserQuestion (previews only for competing variants). Do not persist until the user confirms the lesson is stated
+right — a wrong generalization recorded is worse than none. If the
+correction contradicts an existing CLAUDE.md rule, surface the conflict and
+ask which wins.
+
+## 3. Persist — write the rule
 
 **Choose the destination:**
 
@@ -75,7 +86,7 @@ follows it:**
 - Include a concrete example if the rule is easy to misread.
 - No references to "this conversation", today's date, or the specific incident.
 
-## 3. Red-team — second pass on the written rule
+## 4. Red-team — second pass on the written rule
 
 Re-read the rule exactly as it now stands in the file, pretending you have zero
 memory of this conversation, and simulate re-encountering the original
@@ -99,7 +110,7 @@ situation (and near-variants of it):
 Amend the rule to close any gap you find. If closing a gap requires a decision
 only the user can make, ask now rather than papering over it.
 
-## 4. Summarize — say what you learned
+## 5. Summarize — say what you learned
 
 Before touching the original work, give a short summary:
 - **Lesson**: the rule as written, quoted verbatim.
@@ -107,7 +118,7 @@ Before touching the original work, give a short summary:
   revision of an existing rule.
 - **Next**: what you're about to change to address the immediate feedback.
 
-## 5. Fix — address the feedback
+## 6. Fix — address the feedback
 
 Redo or correct the original work per the feedback. If the fix reveals the rule
 was mis-stated (the real lesson turns out different), go back and amend the
