@@ -12,12 +12,34 @@ description: The user's git preferences — applies to commits, amends, cherry-p
   covers that action once, not the rest of the session. In particular:
   editing an installed skill never implies committing or pushing it.
 - Stay on feature branches; never commit on `main`. Return to `main` after merge.
+- Assume the primary checkout is SHARED: other agent sessions may be working
+  in it concurrently, and a branch switch underneath them makes their commits
+  land on the wrong branch. Never create, switch, or rebase branches in the
+  primary checkout — do all branch work in a git worktree
+  (`git worktree add <dir>/<branch> <branch>`, honoring the repo's convention
+  for the directory, e.g. `.worktrees/`), and leave the primary checkout on
+  its default branch. Unexpected working-tree edits or unfamiliar commits in
+  the primary checkout are another session's live work — never stage, stash,
+  reset, or "tidy" them, and don't build on top of them.
+- When the branch content originates as edits in the primary tree, MOVE it
+  to the worktree, never copy: after the worktree commits land, verify each
+  file is byte-identical to the branch (`diff -r`), then remove the
+  duplicates from the primary (delete untracked copies, `git checkout --`
+  the tracked ones), leaving unstaged ONLY what is not going into the
+  branch. The same content in two places guarantees pull friction at merge
+  time; the byte-identity check is what makes the removal safe.
 - Pull with rebase (`git pull --rebase`). In a repo that intentionally
   carries long-lived uncommitted edits, suggest `git config
   rebase.autostash true` (repo-local) once — it auto-stashes and restores
   them around each pull instead of erroring.
 - Force-push: `--force-with-lease` only, on feature branches. Never plain `--force`. Never to `main`.
 - Before `git push`: `git fetch origin` and confirm the current branch tracks a remote.
+- Before any push that will face CI, run the project's own gates locally on
+  the changed files first — typecheck, tests, lint/complexity, scoped
+  mutation testing when logic changed. Run EVERY gate the PR runs, not a
+  subset (a gate skipped locally is the one that fails remotely). CI
+  confirms, it never informs: pushing to learn what a local run would have
+  said wastes a full CI round trip.
 
 ## Commits
 
@@ -28,9 +50,13 @@ description: The user's git preferences — applies to commits, amends, cherry-p
   whether parts should stay unstaged. Local-only edits (personal notes,
   machine-specific tweaks) are legitimate and may live in the working tree
   indefinitely — an unclean tree is not a mess to tidy. When a file mixes
-  committable and local-only changes, split them: write the committable
-  version, stage and commit it, then restore the local-only edits to the
-  working tree.
+  committable and local-only changes, or its changes belong in different
+  commits, split at the HUNK level: save `git diff <file>` to a patch,
+  trim it to the hunks being committed, and stage with
+  `git apply --cached <patch>` — the working tree never changes
+  (`git add -p` is interactive and usually unavailable). Never edit the
+  file to temporarily remove content, commit, and re-add it: churning the
+  tree to serve staging risks committing the mutilated intermediate.
 - Don't `git add` files you didn't generate.
 - Untracked files that shouldn't be tracked: propose a `.gitignore` entry only if the file is project-relevant (build artifact, env template, anything other devs would also generate). Personal files (editor noise, local notes) — leave alone; they belong in `~/.gitignore_global` or nowhere.
 - Empty commits OK when intentional (e.g., CI trigger). Never use `wip`/`WIP` subjects.
