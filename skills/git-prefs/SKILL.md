@@ -42,6 +42,27 @@ description: The user's git preferences — applies to commits, amends, cherry-p
   confirms, it never informs: pushing to learn what a local run would have
   said wastes a full CI round trip.
 
+## Destructive operations
+
+The global rule applies: **decompose → simplify → defer** — split any
+one-liner containing a destructive step into stages (as far as sensible,
+not to excess), try the least-destructive command that does the job before
+escalating to one that may need approval, and if a known-dangerous command
+is still needed, don't run it — finish everything else and present it at
+the end. The git equivalents:
+
+- **Moving a branch with no unique commits onto a ref:** `git merge
+  --ff-only <ref>`, or create a new branch from the ref. `reset --hard` is
+  almost never warranted; when a reset is, `--soft` / `--mixed` keeps the
+  work in the tree.
+- **Local edits are never dropped.** If they must move out of the way,
+  `git stash` and `git stash pop` right after the step that needed the
+  clean tree — a stash is a parking spot, not a hiding place. Never
+  `checkout --`/`restore` away edits you didn't make.
+- **Untracked files:** `git clean -n` to list, then delete the named
+  files; never `clean -fd`.
+- **Remote history:** `--force-with-lease`, feature branches only.
+
 ## Commits
 
 - Commit message: clear descriptive subject, body lines for detail when it helps. No Conventional Commits prefixes (`feat:` / `fix:` / etc.).

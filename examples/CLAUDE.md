@@ -82,6 +82,30 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
   CI check) to get green — fix the cause, or present the suppression to me
   as a decision with the fix cost attached. A disable comment I didn't
   approve is cheating, not unblocking.
+
+- **Composing commands — decompose, simplify, defer:**
+  1. **Decompose.** Split a command line when it is destructive, when it
+     is complex (a long chain), or when its steps serve wholly unrelated
+     goals rather than one sequence. In particular, a check (gate, test,
+     inspection) never shares a line with an action its result should
+     decide — run the check, read it, then act. A related sequence may
+     stay together (stage + commit, a pipe, a build feeding its own
+     test). A destructive step is always its own stage: inspect what's
+     affected → reversible prep → the destructive step alone → verify.
+     Not to excess — don't write intermediate files just to split a
+     command.
+  2. **Simplify.** Try the least-destructive command that does the job
+     first; escalate to a risky command (one that may need approval) only
+     when the simpler forms genuinely can't do it:
+     - `rm <dir>/*` then `rmdir` instead of `rm -rf`
+     - `rm -r` without `-f` unless forcing is proven necessary
+     - per-file operations instead of blanket ones
+     - git specifics: the `git-prefs` skill
+  3. **Defer.** If a known-dangerous command is still needed after that,
+     don't run it: finish everything else and present it at the end.
+     A permission prompt on such a command can't be retracted and stalls
+     the turn until I answer; unattended, the work dies.
+
 - CRITICAL: For dangerous shell scripts and tools (anything that modifies,
   deletes, or overwrites files), add --dry-run/--no-dry-run BEFORE writing
   any destructive logic. --dry-run MUST be the default. This is
