@@ -4,8 +4,9 @@ Not installable — copy it, keep what fits, delete what doesn't.
 The working tree may carry personal, intentionally-uncommitted edits to
 this file; diffs are reviewed before anything is staged or pushed.
 Slash commands like /grill-me, /tdd, /triage refer to skills from
-https://github.com/mattpocock/skills; `internalize`, `git-prefs`, and
-`background-tasks` are in this repo.
+https://github.com/mattpocock/skills; `internalize`, `git-prefs`,
+`background-tasks`, and the quality skills (`mutation-testing`,
+`complexity-gate`, `code-comments`, `repo-quality-sweep`) are in this repo.
 -->
 
 # General
@@ -58,11 +59,29 @@ round is clean or blocked on me.
 Whenever we're starting new or undefined work in a codebase, run /triage on
 the available issues.
 
+When asked to clean up, tidy, or harden an existing codebase (DRY,
+complexity, comments, dead code), follow the `repo-quality-sweep` skill —
+it sequences the atomic quality skills into small behavior-preserving PRs.
+
 ## Coding
 
-- Add high-signal comments and those where subtleties exist; put comments
-  above the line they apply to.
+- Comments state only what the code cannot show: a non-obvious constraint,
+  subtlety, or trap. Never narrate your reasoning, triage history, or what
+  tool/review prompted a change ("found by mutation testing", "per PR #N
+  review") — that context belongs in the commit message, not the code.
+  Every non-trivial function gets a docstring that leads with what it DOES
+  (input → result); design rationale comes after, if at all. A good name
+  may stand alone only when the arguments are self-describing too. The
+  same bar applies to interfaces/classes and their MEMBERS: document each
+  field unless it's dead clear (a bare `corrected: boolean` says nothing
+  about what was corrected). Put comments above the line they apply to. When in doubt about a line
+  comment, no comment. For JS/TS work, the `code-comments` skill has the
+  JSDoc/TSDoc and directive-comment conventions.
 - Custom code is almost always worse than library code.
+- Never suppress a failing quality gate (lint rule, complexity cap, test,
+  CI check) to get green — fix the cause, or present the suppression to me
+  as a decision with the fix cost attached. A disable comment I didn't
+  approve is cheating, not unblocking.
 - CRITICAL: For dangerous shell scripts and tools (anything that modifies,
   deletes, or overwrites files), add --dry-run/--no-dry-run BEFORE writing
   any destructive logic. --dry-run MUST be the default. This is
@@ -71,6 +90,14 @@ the available issues.
   by trying to fix it. Instead, start by writing tests that reproduce the
   bug, commit the tests, then have subagents try to fix the bug and prove it
   with the passing tests.
+- After any refactor, and before merging a PR that touches pure logic,
+  validation, or parsing, follow the `mutation-testing` skill (scoped run on
+  the changed files, after tests are green); also whenever test coverage is
+  in doubt. Skip it for UI/copy/config-only diffs.
+- Keep cyclomatic complexity ≤ 8 for every function you write or modify —
+  the `complexity-gate` skill has the rule's edges and per-ecosystem lint
+  setup (reference implementations included); load it when writing code or
+  setting up a project's linting.
 
 ### Source Control
 
