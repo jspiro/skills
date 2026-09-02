@@ -12,22 +12,23 @@ description: The user's git preferences — applies to commits, amends, cherry-p
   covers that action once, not the rest of the session. In particular:
   editing an installed skill never implies committing or pushing it.
 - Stay on feature branches; never commit on `main`. Return to `main` after merge.
-- Assume the primary checkout is SHARED: other agent sessions may be working
-  in it concurrently, and a branch switch underneath them makes their commits
-  land on the wrong branch. Never create, switch, or rebase branches in the
-  primary checkout — do all branch work in a git worktree
-  (`git worktree add <dir>/<branch> <branch>`, honoring the repo's convention
-  for the directory, e.g. `.worktrees/`), and leave the primary checkout on
-  its default branch. Unexpected working-tree edits or unfamiliar commits in
-  the primary checkout are another session's live work — never stage, stash,
-  reset, or "tidy" them, and don't build on top of them.
-- When the branch content originates as edits in the primary tree, MOVE it
-  to the worktree, never copy: after the worktree commits land, verify each
-  file is byte-identical to the branch (`diff -r`), then remove the
-  duplicates from the primary (delete untracked copies, `git checkout --`
-  the tracked ones), leaving unstaged ONLY what is not going into the
-  branch. The same content in two places guarantees pull friction at merge
-  time; the byte-identity check is what makes the removal safe.
+- Where branch work happens depends on where the changes are:
+  - **Starting NEW work** (nothing relevant uncommitted yet): use a git
+    worktree (`git worktree add <dir>/<branch> <branch>`, honoring the
+    repo's directory convention, e.g. `.worktrees/`) and leave the primary
+    checkout on its default branch — other agent sessions may share the
+    primary, and a branch switch underneath them lands their commits on
+    the wrong branch.
+  - **Committing changes that already exist in the primary working tree**:
+    ask the user whether to (a) move them into a worktree branch or
+    (b) check out a branch in the primary and commit them in place as
+    usual. Never copy them into a worktree — the same change living in
+    two places guarantees pull friction at merge. If moving, verify each
+    file is byte-identical on the branch before removing it from the
+    primary, leaving unstaged only what is not going into the branch.
+- Unexpected working-tree edits or unfamiliar commits in the primary
+  checkout are another session's live work — never stage, stash, reset, or
+  "tidy" them, and don't build on top of them.
 - Pull with rebase (`git pull --rebase`). In a repo that intentionally
   carries long-lived uncommitted edits, suggest `git config
   rebase.autostash true` (repo-local) once — it auto-stashes and restores
