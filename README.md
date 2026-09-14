@@ -179,9 +179,11 @@ functions for audits.
 
 **How to use it effectively**: when the gate fires on a legacy function
 you touched, the default is to decompose it now — the firing gate IS the
-sweep arriving there. Never `eslint-disable` to get green without
-explicit user sign-off. Reference ESLint config and gate script in
-`references/`.
+sweep arriving there; the skill's decomposition playbook covers the moves
+that work (type-guard once, load → render split, tables for same-shape
+branches, a throwaway render harness to prove byte-identity). Never
+`eslint-disable` to get green without explicit user sign-off. Reference
+ESLint config and gate script in `references/`.
 
 ### [`code-comments`](./skills/code-comments/SKILL.md)
 
