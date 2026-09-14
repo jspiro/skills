@@ -106,3 +106,45 @@ shallow PR-merge checkout can't compute the merge-base diff):
 - **Legacy repos**: over-cap functions the gate hasn't surfaced yet are
   out of scope until touched; the changed-files gate enforces exactly
   that without blocking on the backlog.
+
+## Decomposition playbook
+
+What actually brings a CC-30 handler under the cap without changing its
+output. Measured on a real route-file decomposition (7 functions, CC
+37/27/16/15/14/10/9 → all ≤ 8, byte-identical responses).
+
+- **Probe what the installed rule counts before designing.** ESLint's
+  `complexity` counts every `?.` link, `??`, `&&`/`||`, ternary, `catch`,
+  and loop as +1 — `x?.a?.b ?? "z"` alone is CC 4. Thirty-second check:
+  `npx eslint --rule 'complexity: ["error", 0]' probe.ts` on a scratch
+  file prints the count of each construct you're unsure about.
+- **Narrow once with a type guard, then pass non-null values down.** A
+  single `isScored(meta)` guard at the top of the handler lets every
+  helper take the narrowed type and drop its `meta?.x` / `meta ? … : …`
+  defensiveness — often ten CC points across a file for one guard.
+- **Delete dead branches before extracting them.** A guard that cannot
+  fail after an earlier return, or a ternary whose arms are mutually
+  exclusive by construction, is pure CC cost with zero behavior. Delete,
+  don't relocate.
+- **Split handlers into load → render.** The handler keeps I/O and
+  guards; `renderXPage(input)` is pure string assembly. Each side lands
+  ≤ 8 naturally, and the pure side becomes unit-testable and
+  mutation-visible.
+- **Same-shape `if/else` chains → a table + `filter`/`map`.** Three pill
+  branches become `[["Tight: ", tight], ["Wide: ", wide], ["", proceed]]`
+  filtered for presence: byte-identical output, CC 1.
+- **Move template literals verbatim.** Carry the backtick body, not its
+  content — leading whitespace inside a multi-line template is output.
+  Hoist CSS/JS blocks to module constants; keep interpolations in a
+  function that takes only the variables it needs.
+- **Byte-identity needs a harness, not the existing tests.** Write a
+  throwaway test that renders every route × branch-covering fixtures and
+  dumps status + headers + body to disk; `diff -r` before vs after.
+  Substring-thin suites (the kind a 40% mutation score reveals) will not
+  catch a swapped pill or a dropped separator. Never commit the harness.
+- **Stryker after a split is attribution, not regression.** Survivors
+  that lived inside one 200-line handler now show up per helper. Group
+  them by enclosing function and add tests only where a helper holds
+  logic — thresholds, `>=` vs `>` boundaries, both arms of each `if` — not
+  for CSS or copy literals. Delete the incremental cache before each run
+  (`mutation-testing` skill).

@@ -33,8 +33,12 @@ user as a question and let them correct it. Cover, in order:
 - **Whether a rule is warranted at all** — a one-off may not need
   persisting.
 
-Present your read in the message text first, then call AskUserQuestion to
-collect the answer. Option `preview` blocks are for single-select questions
+Present your read in the message text first — the proposal, what stays
+and what goes, and where it lands — then call AskUserQuestion to collect
+the answer. The question itself is one short line and its options are
+labels, not the place the proposal appears for the first time; a question
+that has to carry the whole read is the overload this phase exists to
+avoid. Option `preview` blocks are for single-select questions
 whose options carry genuinely different texts to compare (variant A vs B);
 never make a preview the only place a single proposal's text appears — a
 question about text the user cannot see is the failure this phase

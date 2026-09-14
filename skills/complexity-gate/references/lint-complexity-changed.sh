@@ -11,12 +11,22 @@
 set -euo pipefail
 
 base="${1:-origin/main}"
+merge_base="$(git merge-base "$base" HEAD)"
+pathspec=('*.ts' '*.tsx' '*.mts' '*.mjs')
 
-# --diff-filter=d: skip deleted files (nothing to lint).
+# Diff the merge-base against the WORKING TREE, not HEAD, so a local
+# pre-commit run sees the same files CI will see once they're committed;
+# untracked new files come from ls-files. --diff-filter=d: skip deleted
+# files (nothing to lint).
 files=()
 while IFS= read -r f; do
   files+=("$f")
-done < <(git diff --name-only --diff-filter=d "$base"...HEAD -- '*.ts' '*.tsx' '*.mts' '*.mjs')
+done < <(
+  {
+    git diff --name-only --diff-filter=d "$merge_base" -- "${pathspec[@]}"
+    git ls-files --others --exclude-standard -- "${pathspec[@]}"
+  } | sort -u
+)
 
 if [ "${#files[@]}" -eq 0 ]; then
   echo "No changed lintable files vs $base."
