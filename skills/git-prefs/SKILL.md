@@ -111,6 +111,34 @@ Check how signing is set up before assuming anything:
   rewrite already-pushed/shared history beyond a `--force-with-lease` on the
   feature branch.
 
+## PR descriptions
+
+A PR body serves two readers before it serves the code reviewer: someone
+without code context deciding whether to care, and someone about to
+smoke-test the change. Both come first; the technical detail follows.
+
+- **Lead with a plain-language summary.** What changes for users (say
+  "nothing visible" when true), why it lands now, and the risk with the
+  evidence behind it. No file names, no function names.
+- **Follow it with a "Manual verification" section a tester can follow
+  without reading the diff**, ahead of the technical sections. In this
+  order:
+  1. **Deployment status** — whether the branch is on staging, and the
+     command to put it there if not.
+  2. **Targeted checks first**, one per behaviour the PR actually changes.
+     Whenever a check has a cheap mechanical form, spell it out to
+     copy-paste: the exact CLI to stage the bad input, the console
+     one-liner and its expected value, the command to restore.
+  3. **Then the areas to glance at** so the rest of the diff didn't break
+     something important — named as surfaces ("one candidate page with
+     several signals: tabs, timeline, one download"), with the reason a
+     glance is enough (tests proving output unchanged, etc.).
+- **Length follows risk.** A refactor proven byte-identical is a
+  one-line glance, not a walkthrough; a checklist longer than the risk
+  statement warrants contradicts it.
+- **Never list what does NOT need testing** — it costs the reader time
+  and says nothing they can act on. Leave untouched paths out entirely.
+
 ## After pushing to a PR
 
 A push is not the end of the work: every push (initial or follow-up)

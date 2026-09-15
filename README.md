@@ -77,8 +77,10 @@ follow the `git-prefs` skill") replaces a page of rules. Mine covers branch
 and force-push discipline, individual staging, message style, identity
 guardrails, a signing workflow that handles signing being unconfigured,
 configured and working, or configured with the signer locked (e.g. a locked
-1Password vault) — without ever blocking work — and a light after-pushing
-rule: PR work is never dropped silently.
+1Password vault) — without ever blocking work — a PR-description shape
+(plain-language summary first, then a risk-proportional manual-verification
+section with copy-paste recipes, technical detail after), and a light
+after-pushing rule: PR work is never dropped silently.
 
 **How to use it**: install, add the one-liner to your CLAUDE.md, then edit
 the rules to your own taste — it's a template for *your* preferences as much
