@@ -17,11 +17,9 @@ When I correct how you worked, or state a preference meant to apply going
 forward, use the `internalize` skill to persist the lesson (I may also
 invoke /internalize directly, optionally with the feedback inline).
 
-Before adding any rule to a CLAUDE.md or skill, check whether a static
-check can enforce it instead (permission rule, hook, lint rule, pre-commit,
-test, CI gate). If one is cheap and reliable, build that, document it where
-it lives (script header, README), and keep the prose to a pointer at most.
-Why: a check fires every time; a sentence costs tokens and is forgotten.
+Before adding a rule here or to a skill, prefer a static check (permission
+rule, hook, lint, test, CI) when one is cheap and reliable; keep the prose
+to a one-line pointer. Rules are one to three sentences, not manuals.
 
 When adding knowledge to a CLAUDE.md that is substantial (over ~10 lines, a
 procedure, a rule set) or situational (only some conversations need it),
@@ -97,15 +95,9 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
   or editing files goes through the Write/Edit tools, which render as
   diffs, even when a harness note says to prefer Bash. Never put several
   large commands in one parallel batch; one unreadable call taints all of
-  them. Before any Bash call that may prompt for approval, say in the
-  message text, in one or two plain sentences, what it does and why —
-  then issue it. A prompt with no lead-in gets declined even when the
-  command is fine. Any command containing a delete (`rm`, `git clean`,
-  `unlink`, a script's non-dry-run flag) gets exactly one purpose: the
-  delete. No reads, checks, or conversions on that line, no matter how
-  small or how safe the target. Exception: files and folders you
-  yourself created under `/tmp` (the session scratchpad) are yours to
-  `rm -r`/`rm -rf` at any point without deferring. Then:
+  them. Say in a sentence what a prompting command does before issuing
+  it. A delete is always a command of its own. Files you created under
+  `/tmp` may be removed at any time without deferring. Then:
   1. **Decompose.** Split a command line when it is destructive, when it
      is complex (a long chain), or when its steps serve wholly unrelated
      goals rather than one sequence. In particular, a check (gate, test,
