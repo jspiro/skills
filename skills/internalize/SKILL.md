@@ -44,12 +44,39 @@ never make a preview the only place a single proposal's text appears — a
 question about text the user cannot see is the failure this phase
 prevents. Iterate until the user confirms your read matches theirs.
 
+## 1b. Prefer a check over prose
+
+Before drafting any rule text, ask: can a machine enforce this instead of
+an instruction? Candidates, cheapest first: a permission allow/ask/deny
+rule, a PreToolUse or PostToolUse hook, a lint rule or formatter setting,
+a pre-commit hook, a unit test, a CI gate. If one fits and is cheap and
+reliable, that check IS the lesson — build it, pipe-test it, and make the
+prose at most a one-line pointer ("line length is enforced by the
+`ruff` config"). A check that is flaky, slow, or needs
+more than a few dozen lines to express the lesson is worse than a
+sentence; then write the sentence.
+
+Every check must explain itself where a reader will find it: a header
+comment in the script, a line in the repo's README or the hooks folder's
+README stating what it enforces and why. Prefer that location over
+CLAUDE.md so the explanation costs no context tokens. The user decides
+whether a prose pointer stays alongside the check; present that as a
+question in the step-1 interview, not as a default.
+
+The same preference applies when setting up or tidying a repo: a
+convention becomes a lint rule, a test, or a CI job before it becomes a
+CLAUDE.md paragraph.
+
 ## 2. Propose — state the rule
 
-Only now restate the lesson as the rule you'd write: show the exact text in
-the message body (a fenced block), name the destination, then collect
-approve/revise with AskUserQuestion (previews only for competing variants). Do not persist until the user confirms the lesson is stated
-right — a wrong generalization recorded is worse than none. If the
+Only now restate the lesson as the rule you'd write. The proposal IS the
+Write/Edit tool call: name the destination in one line, then issue the
+edit so the permission prompt shows the real diff — approving or declining
+it is the user's answer. Never describe the change in prose and ask about
+it instead; a rule the user can't see as a diff reads as "not shown". Use
+AskUserQuestion here only to choose between genuinely competing variants
+(each shown in full as a preview). Do not persist until the user accepts
+the diff — a wrong generalization recorded is worse than none. If the
 correction contradicts an existing CLAUDE.md rule, surface the conflict and
 ask which wins.
 
