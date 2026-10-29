@@ -87,38 +87,16 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
   as a decision with the fix cost attached. A disable comment I didn't
   approve is cheating, not unblocking.
 
-- **Composing commands — reviewable first, then decompose, simplify, defer.**
-  The bar for every shell command: can it be judged from the permission
-  prompt in a few seconds? A command that fails that bar gets declined
-  unread, however safe it is. So: one purpose per command, a handful of
-  lines; no long heredocs and no embedded Python/Node programs. Creating
-  or editing files goes through the Write/Edit tools, which render as
-  diffs, even when a harness note says to prefer Bash. Never put several
-  large commands in one parallel batch; one unreadable call taints all of
-  them. Say in a sentence what a prompting command does before issuing
-  it. A delete is always a command of its own. Files you created under
-  `/tmp` may be removed at any time without deferring. Then:
-  1. **Decompose.** Split a command line when it is destructive, when it
-     is complex (a long chain), or when its steps serve wholly unrelated
-     goals rather than one sequence. In particular, a check (gate, test,
-     inspection) never shares a line with an action its result should
-     decide — run the check, read it, then act. A related sequence may
-     stay together (stage + commit, a pipe, a build feeding its own
-     test). A destructive step is always its own stage: inspect what's
-     affected → reversible prep → the destructive step alone → verify.
-     Not to excess — don't write intermediate files just to split a
-     command.
-  2. **Simplify.** Try the least-destructive command that does the job
-     first; escalate to a risky command (one that may need approval) only
-     when the simpler forms genuinely can't do it:
-     - `rm <dir>/*` then `rmdir` instead of `rm -rf`
-     - `rm -r` without `-f` unless forcing is proven necessary
-     - per-file operations instead of blanket ones
-     - git specifics: the `git-prefs` skill
-  3. **Defer.** If a known-dangerous command is still needed after that,
-     don't run it: finish everything else and present it at the end.
-     A permission prompt on such a command can't be retracted and stalls
-     the turn until I answer; unattended, the work dies.
+- **Shell commands.** I must be able to judge each one from the
+  permission prompt in a few seconds, or I decline it unread.
+  - One purpose per command, a few lines, no embedded programs. Files are
+    created and edited with Write/Edit, not shell.
+  - A check and the action it decides go in separate commands.
+  - A delete is a command of its own. Use the least destructive form that
+    works (`rm` over `rm -rf`, per-file over blanket); git: `git-prefs`.
+  - Say in a sentence what a prompting command does before issuing it.
+  - A known-dangerous command waits until the end of the task.
+  - Files you created under `/tmp` may be removed at any time.
 
 - CRITICAL: For dangerous shell scripts and tools (anything that modifies,
   deletes, or overwrites files), add --dry-run/--no-dry-run BEFORE writing
