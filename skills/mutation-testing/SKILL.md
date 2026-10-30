@@ -28,16 +28,10 @@ Skip: UI/copy/style-only diffs, config changes, prototypes, generated code.
 Two modes:
 - **PR-scoped (the default)**: mutate only the changed logic files. Minutes,
   not hours. This is the practice.
-- **Full-repo baseline**: occasional audit (manually-dispatched workflow or
-  background run) to track the overall mutation score. Never block a PR on
-  it. Reference setup: a `mutation:full` package script (`stryker run
-  --incrementalFile reports/stryker-incremental-full.json --mutate
-  'src/**/*.ts,!src/**/*.test.ts,!<generated>,!<test-utils>'` — separate
-  incremental file so audit and scoped runs don't poison each other's
-  cache) plus a `workflow_dispatch`-only GitHub Actions job that runs it
-  and uploads `reports/` as an artifact (pair it with the CRAP report from
-  the `complexity-gate` skill — one artifact answers both "what's untested"
-  and "what's risky").
+- **Full-repo baseline**: occasional audit from a `workflow_dispatch`-only
+  job that uploads `reports/` (alongside the CRAP report from
+  `complexity-gate`). Never block a PR on it. Give it its own
+  `--incrementalFile` so audit and scoped runs don't share a cache.
 
 ## Tools (use the ecosystem's standard — no custom mutators)
 
@@ -113,14 +107,11 @@ Work the survived list; the score is secondary.
      files for zero information.
 2. **Equivalent / don't-care mutant**: the mutation genuinely doesn't change
    observable behavior (log wording, defensive redundancy). "No test
-   distinguishes them" is NOT "no input does" — before ruling a mutant
-   equivalent, actively try to construct the distinguishing input, thinking
-   adversarially for security guards (a guard on parsed-URL parts was once
-   ruled equivalent this way and the "redundant" check turned out to block a
-   path-embedded payload). Do NOT suppress these unilaterally — present each
-   candidate to the user with the reasoning and get agreement first (the
-   user calibrates the triage rule this way; they may later delegate it). Once agreed, suppress with a reasoned
-   annotation rather than a contrived test:
+   distinguishes them" is NOT "no input does": try to construct the
+   distinguishing input, adversarially for security guards (a "redundant"
+   URL guard once turned out to block a path-embedded payload). Present
+   each candidate to the user with the reasoning before suppressing. Once
+   agreed, suppress with a reasoned annotation rather than a contrived test:
    `// Stryker disable next-line <MutatorName>: <why this is untestable/don't-care>`
 3. **Timeouts count as killed** (the mutant broke termination — tests caught it).
 

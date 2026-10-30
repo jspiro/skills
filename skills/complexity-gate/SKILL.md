@@ -13,20 +13,14 @@ Legacy functions you aren't touching are not your problem that day.
 ## CRAP, for orientation
 
 CRAP (Change Risk Anti-Patterns) = `comp² × (1 − coverage)³ + comp`;
-alarm threshold ≈ 30. It says complex-AND-untested is where change risk
-lives. This gate holds the `comp` factor at ≤ 8 (CRAP ≤ 72 even with zero
-coverage, ≤ 8 with full coverage); the `mutation-testing` skill is what
-makes the coverage factor honest.
+alarm at ≈ 30. Complex AND untested is where change risk lives. This gate
+holds `comp` at ≤ 8 (CRAP ≤ 72 even uncovered); `mutation-testing` keeps
+the coverage factor honest.
 
-ESLint is the right tool for the per-function COMPLEXITY gate (fast,
-changed-files scoping, CI-friendly) but computes no coverage, so it can't
-produce CRAP itself. For the CRAP report use `crap-score` (npm, from
-ahilke/js-crap-score — validated working against Vitest v8 coverage);
-alternatives `crap4ts` (Rust CLI) and crap4js exist but are younger. Use
-it as a periodic AUDIT ranking the riskiest functions — not a per-PR
-gate; the ESLint cap + scoped mutation runs are the gates.
-
-Working invocation (package script `crap`):
+ESLint computes no coverage, so the CRAP report comes from `crap-score`
+(npm, ahilke/js-crap-score, works against Vitest v8 coverage). It is a
+periodic audit ranking the riskiest functions, not a per-PR gate.
+Package script `crap`:
 
 ```
 vitest run --project node --coverage --coverage.reporter=json \
@@ -96,16 +90,12 @@ shallow PR-merge checkout can't compute the merge-base diff):
   modify, enforced by you as you write — the linter is the backstop.
 - **Before committing**: run `pnpm lint:complexity:changed`; a violation
   in a function you modified is a must-fix.
-- **When the gate fires on a function you did NOT modify** (the gate is
-  file-scoped, so touching any line of a file surfaces its legacy
-  offenders): the DEFAULT is to decompose that function now — the firing
-  gate IS the sweep arriving there, and the fix is usually minutes. Never
-  add an `eslint-disable` to get green without the user's explicit OK;
-  present it as a decision with the fix cost attached. A suppression
-  hides the debt from the only mechanism that surfaces it.
-- **Legacy repos**: over-cap functions the gate hasn't surfaced yet are
-  out of scope until touched; the changed-files gate enforces exactly
-  that without blocking on the backlog.
+- **When the gate fires on a function you did NOT modify** (it is
+  file-scoped, so touching any line surfaces a file's legacy offenders):
+  decompose it now; the fix is usually minutes. Never `eslint-disable` to
+  get green without the user's explicit OK, presented with the fix cost.
+- **Legacy repos**: over-cap functions the gate hasn't surfaced are out of
+  scope until touched.
 
 ## Decomposition playbook
 
@@ -143,8 +133,5 @@ output. Measured on a real route-file decomposition (7 functions, CC
   Substring-thin suites (the kind a 40% mutation score reveals) will not
   catch a swapped pill or a dropped separator. Never commit the harness.
 - **Stryker after a split is attribution, not regression.** Survivors
-  that lived inside one 200-line handler now show up per helper. Group
-  them by enclosing function and add tests only where a helper holds
-  logic — thresholds, `>=` vs `>` boundaries, both arms of each `if` — not
-  for CSS or copy literals. Delete the incremental cache before each run
-  (`mutation-testing` skill).
+  now show up per helper; add tests only where a helper holds logic, not
+  for CSS or copy literals. Triage rules: `mutation-testing` skill.

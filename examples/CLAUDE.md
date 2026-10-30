@@ -17,12 +17,12 @@ When I correct how you worked, or state a preference meant to apply going
 forward, use the `internalize` skill to persist the lesson (I may also
 invoke /internalize directly, optionally with the feedback inline).
 
-When adding knowledge to a CLAUDE.md that is substantial (over ~10 lines, a
-procedure, a rule set) or situational (only some conversations need it),
-put it in a skill instead and leave a one-line pointer here naming the
-trigger ("for any git work, follow the `git-prefs` skill"). CLAUDE.md lines
-cost every conversation's context; skills load on demand. Short,
-always-relevant rules still belong directly in CLAUDE.md.
+Before adding a rule here or to a skill, prefer a static check (permission
+rule, hook, lint, test, CI) when one is cheap and reliable. Rules are one
+to three sentences, not manuals. Substantial or situational knowledge goes
+in a skill, with a one-line pointer here naming the trigger ("for any git
+work, follow the `git-prefs` skill"); CLAUDE.md lines cost every
+conversation's context, skills load on demand.
 
 You are AI, not a human, so don't estimate work in human hours unless that's
 the exercise. You will do the work, so the real tradeoffs are more about
@@ -66,50 +66,31 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
 ## Coding
 
 - Comments state only what the code cannot show: a non-obvious constraint,
-  subtlety, or trap. Never narrate your reasoning, triage history, or what
-  tool/review prompted a change ("found by mutation testing", "per PR #N
-  review") — that context belongs in the commit message, not the code.
-  Every non-trivial function gets a docstring that leads with what it DOES
-  (input → result); design rationale comes after, if at all. A good name
-  may stand alone only when the arguments are self-describing too. The
-  same bar applies to interfaces/classes and their MEMBERS: document each
-  field unless it's dead clear (a bare `corrected: boolean` says nothing
-  about what was corrected). Put comments above the line they apply to. When in doubt about a line
-  comment, no comment. For JS/TS work, the `code-comments` skill has the
-  JSDoc/TSDoc and directive-comment conventions.
+  subtlety, or trap. Never narrate your reasoning or what review prompted
+  a change; that belongs in the commit message. Every non-trivial function
+  and every non-obvious field gets a docstring that leads with what it
+  DOES. When in doubt about a line comment, no comment. For JS/TS work,
+  the `code-comments` skill has the conventions.
 - Custom code is almost always worse than library code.
 - Never suppress a failing quality gate (lint rule, complexity cap, test,
   CI check) to get green — fix the cause, or present the suppression to me
   as a decision with the fix cost attached. A disable comment I didn't
   approve is cheating, not unblocking.
 
-- **Composing commands — decompose, simplify, defer:**
-  1. **Decompose.** Split a command line when it is destructive, when it
-     is complex (a long chain), or when its steps serve wholly unrelated
-     goals rather than one sequence. In particular, a check (gate, test,
-     inspection) never shares a line with an action its result should
-     decide — run the check, read it, then act. A related sequence may
-     stay together (stage + commit, a pipe, a build feeding its own
-     test). A destructive step is always its own stage: inspect what's
-     affected → reversible prep → the destructive step alone → verify.
-     Not to excess — don't write intermediate files just to split a
-     command.
-  2. **Simplify.** Try the least-destructive command that does the job
-     first; escalate to a risky command (one that may need approval) only
-     when the simpler forms genuinely can't do it:
-     - `rm <dir>/*` then `rmdir` instead of `rm -rf`
-     - `rm -r` without `-f` unless forcing is proven necessary
-     - per-file operations instead of blanket ones
-     - git specifics: the `git-prefs` skill
-  3. **Defer.** If a known-dangerous command is still needed after that,
-     don't run it: finish everything else and present it at the end.
-     A permission prompt on such a command can't be retracted and stalls
-     the turn until I answer; unattended, the work dies.
+- **Shell commands.** I must be able to judge each one from the
+  permission prompt in a few seconds, or I decline it unread.
+  - One purpose per command, a few lines, no embedded programs. Files are
+    created and edited with Write/Edit, not shell.
+  - A check and the action it decides go in separate commands.
+  - A delete is a command of its own. Use the least destructive form that
+    works (`rm` over `rm -rf`, per-file over blanket); git: `git-prefs`.
+  - Say in a sentence what a prompting command does before issuing it.
+  - A known-dangerous command waits until the end of the task.
+  - Files you created under `/tmp` may be removed at any time.
 
-- CRITICAL: For dangerous shell scripts and tools (anything that modifies,
-  deletes, or overwrites files), add --dry-run/--no-dry-run BEFORE writing
-  any destructive logic. --dry-run MUST be the default. This is
-  non-negotiable and must be the FIRST thing implemented, not added later.
+- Any script or tool that modifies, deletes, or overwrites files gets
+  `--dry-run`/`--no-dry-run` as the FIRST thing implemented, with dry-run
+  the default. Non-negotiable.
 - When I report a bug and the project has a testing framework, don't start
   by trying to fix it. Instead, start by writing tests that reproduce the
   bug, commit the tests, then have subagents try to fix the bug and prove it
