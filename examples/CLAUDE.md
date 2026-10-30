@@ -18,15 +18,11 @@ forward, use the `internalize` skill to persist the lesson (I may also
 invoke /internalize directly, optionally with the feedback inline).
 
 Before adding a rule here or to a skill, prefer a static check (permission
-rule, hook, lint, test, CI) when one is cheap and reliable; keep the prose
-to a one-line pointer. Rules are one to three sentences, not manuals.
-
-When adding knowledge to a CLAUDE.md that is substantial (over ~10 lines, a
-procedure, a rule set) or situational (only some conversations need it),
-put it in a skill instead and leave a one-line pointer here naming the
-trigger ("for any git work, follow the `git-prefs` skill"). CLAUDE.md lines
-cost every conversation's context; skills load on demand. Short,
-always-relevant rules still belong directly in CLAUDE.md.
+rule, hook, lint, test, CI) when one is cheap and reliable. Rules are one
+to three sentences, not manuals. Substantial or situational knowledge goes
+in a skill, with a one-line pointer here naming the trigger ("for any git
+work, follow the `git-prefs` skill"); CLAUDE.md lines cost every
+conversation's context, skills load on demand.
 
 You are AI, not a human, so don't estimate work in human hours unless that's
 the exercise. You will do the work, so the real tradeoffs are more about
@@ -70,17 +66,11 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
 ## Coding
 
 - Comments state only what the code cannot show: a non-obvious constraint,
-  subtlety, or trap. Never narrate your reasoning, triage history, or what
-  tool/review prompted a change ("found by mutation testing", "per PR #N
-  review") — that context belongs in the commit message, not the code.
-  Every non-trivial function gets a docstring that leads with what it DOES
-  (input → result); design rationale comes after, if at all. A good name
-  may stand alone only when the arguments are self-describing too. The
-  same bar applies to interfaces/classes and their MEMBERS: document each
-  field unless it's dead clear (a bare `corrected: boolean` says nothing
-  about what was corrected). Put comments above the line they apply to. When in doubt about a line
-  comment, no comment. For JS/TS work, the `code-comments` skill has the
-  JSDoc/TSDoc and directive-comment conventions.
+  subtlety, or trap. Never narrate your reasoning or what review prompted
+  a change; that belongs in the commit message. Every non-trivial function
+  and every non-obvious field gets a docstring that leads with what it
+  DOES. When in doubt about a line comment, no comment. For JS/TS work,
+  the `code-comments` skill has the conventions.
 - Custom code is almost always worse than library code.
 - Never suppress a failing quality gate (lint rule, complexity cap, test,
   CI check) to get green — fix the cause, or present the suppression to me
@@ -98,10 +88,9 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
   - A known-dangerous command waits until the end of the task.
   - Files you created under `/tmp` may be removed at any time.
 
-- CRITICAL: For dangerous shell scripts and tools (anything that modifies,
-  deletes, or overwrites files), add --dry-run/--no-dry-run BEFORE writing
-  any destructive logic. --dry-run MUST be the default. This is
-  non-negotiable and must be the FIRST thing implemented, not added later.
+- Any script or tool that modifies, deletes, or overwrites files gets
+  `--dry-run`/`--no-dry-run` as the FIRST thing implemented, with dry-run
+  the default. Non-negotiable.
 - When I report a bug and the project has a testing framework, don't start
   by trying to fix it. Instead, start by writing tests that reproduce the
   bug, commit the tests, then have subagents try to fix the bug and prove it
