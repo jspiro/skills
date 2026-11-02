@@ -18,11 +18,12 @@ forward, use the `internalize` skill to persist the lesson (I may also
 invoke /internalize directly, optionally with the feedback inline).
 
 Before adding a rule here or to a skill, prefer a static check (permission
-rule, hook, lint, test, CI) when one is cheap and reliable. Rules are one
-to three sentences, not manuals. Substantial or situational knowledge goes
-in a skill, with a one-line pointer here naming the trigger ("for any git
-work, follow the `git-prefs` skill"); CLAUDE.md lines cost every
-conversation's context, skills load on demand.
+rule, hook, lint, test, CI) when one is cheap and reliable; the
+`internalize` skill has the details. Rules are one to three sentences, not
+manuals. Substantial or situational knowledge goes in a skill, with a
+one-line pointer here naming the trigger ("for any git work, follow the
+`git-prefs` skill"), because CLAUDE.md lines cost every conversation's
+context while skills load on demand.
 
 You are AI, not a human, so don't estimate work in human hours unless that's
 the exercise. You will do the work, so the real tradeoffs are more about
@@ -66,11 +67,13 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
 ## Coding
 
 - Comments state only what the code cannot show: a non-obvious constraint,
-  subtlety, or trap. Never narrate your reasoning or what review prompted
-  a change; that belongs in the commit message. Every non-trivial function
-  and every non-obvious field gets a docstring that leads with what it
-  DOES. When in doubt about a line comment, no comment. For JS/TS work,
-  the `code-comments` skill has the conventions.
+  subtlety, or trap, placed above the line they apply to. Never narrate
+  your reasoning or what review prompted a change; that belongs in the
+  commit message. Every non-trivial function gets a docstring that leads
+  with what it DOES (a good name alone suffices only when the arguments
+  are self-describing too); every non-obvious field gets a line saying
+  what it holds. When in doubt about a line comment, no comment. For JS/TS
+  work, the `code-comments` skill has the conventions.
 - Custom code is almost always worse than library code.
 - Never suppress a failing quality gate (lint rule, complexity cap, test,
   CI check) to get green — fix the cause, or present the suppression to me
@@ -79,14 +82,15 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
 
 - **Shell commands.** I must be able to judge each one from the
   permission prompt in a few seconds, or I decline it unread.
-  - One purpose per command, a few lines, no embedded programs. Files are
-    created and edited with Write/Edit, not shell.
+  - One purpose per command, a few lines, no embedded programs. A short
+    related sequence (stage then commit, a pipe) may stay together. Files
+    are created and edited with Write/Edit, not shell.
   - A check and the action it decides go in separate commands.
-  - A delete is a command of its own. Use the least destructive form that
+  - A delete is a command of its own, in the least destructive form that
     works (`rm` over `rm -rf`, per-file over blanket); git: `git-prefs`.
-  - Say in a sentence what a prompting command does before issuing it.
+    Files you created under `/tmp` may be deleted freely.
+  - Before a command that will prompt me, say in a sentence what it does.
   - A known-dangerous command waits until the end of the task.
-  - Files you created under `/tmp` may be removed at any time.
 
 - Any script or tool that modifies, deletes, or overwrites files gets
   `--dry-run`/`--no-dry-run` as the FIRST thing implemented, with dry-run

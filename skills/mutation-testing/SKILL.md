@@ -28,10 +28,10 @@ Skip: UI/copy/style-only diffs, config changes, prototypes, generated code.
 Two modes:
 - **PR-scoped (the default)**: mutate only the changed logic files. Minutes,
   not hours. This is the practice.
-- **Full-repo baseline**: occasional audit from a `workflow_dispatch`-only
-  job that uploads `reports/` (alongside the CRAP report from
-  `complexity-gate`). Never block a PR on it. Give it its own
-  `--incrementalFile` so audit and scoped runs don't share a cache.
+- **Full-repo baseline**: occasional audit, run locally in the background
+  or from a `workflow_dispatch`-only job that uploads `reports/` (alongside
+  the CRAP report from `complexity-gate`). Never block a PR on it. Give it
+  its own `--incrementalFile` so audit and scoped runs don't share a cache.
 
 ## Tools (use the ecosystem's standard — no custom mutators)
 

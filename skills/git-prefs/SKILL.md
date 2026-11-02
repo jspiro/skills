@@ -37,9 +37,9 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 
 ## Destructive operations
 
-The global shell-command rule applies (a delete is its own command, least
-destructive form first, known-dangerous commands wait until the end). The
-git equivalents:
+A delete is a command of its own, in its least destructive form; a
+known-dangerous command waits until the end of the task. The git
+equivalents:
 
 - **Moving a branch with no unique commits onto a ref:** `git merge
   --ff-only <ref>`, or create a new branch from the ref. `reset --hard` is
@@ -114,9 +114,8 @@ code reviewer:
 
 ## After pushing to a PR
 
-Every push triggers a review round. Address findings until the PR is
-clean or blocked on the user, then alert them with the state; never let
-PR work drop silently. Lifecycle discipline: the `background-tasks` skill.
+Every push starts a review round; own it until the PR is clean or blocked
+on the user, per the `background-tasks` skill.
 
 ## Identity (don't override)
 

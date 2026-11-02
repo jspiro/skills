@@ -7,7 +7,8 @@ description: Turn user corrective feedback into a durable rule — in the right 
 
 When the user says you did something differently than they wanted, extract the
 right lesson, persist it where it will actually prevent a repeat, then fix the
-work. Order: **Q&A → propose → persist → red-team → summarize → fix**.
+work. Order: **Q&A → destination → propose (the edit) → red-team →
+summarize → fix**.
 
 ## 0. Identify the feedback
 
@@ -44,19 +45,10 @@ your read.
 If a permission rule, hook, lint rule, pre-commit, test, or CI gate can
 enforce the lesson cheaply and reliably, build that instead and keep the
 prose to a one-line pointer. Document the check where it lives (script
-header, README), not in CLAUDE.md. Skip this when the check would be
+header, README); CLAUDE.md at most points there. Skip this when the check would be
 flaky or larger than a few dozen lines.
 
-## 2. Propose — state the rule
-
-The proposal is the Edit call itself: name the destination in one line,
-then issue the edit so the diff is the thing approved. Use AskUserQuestion
-only to choose between competing variants. If the correction contradicts
-an existing rule, surface the conflict and ask which wins.
-
-## 3. Persist — write the rule
-
-**Choose the destination:**
+## 2. Choose the destination
 
 | Lesson is about | Destination |
 |---|---|
@@ -80,8 +72,17 @@ include a destination question in the step-1 interview instead of guessing.
   (e.g. a project file's agent-guidance or code-style section) rather than
   appending to the bottom.
 
-**Write the rule so a future agent with zero context of this conversation
-follows it:**
+## 3. Propose — the edit is the proposal
+
+Name the destination in one line, then issue the Edit call so the diff is
+what the user approves. A declined diff is recorded nowhere: a wrong
+generalization persisted is worse than none, so revise and re-propose. Use
+AskUserQuestion only to choose between competing variants. If the
+correction contradicts an existing rule, surface the conflict and ask
+which wins.
+
+Write the rule so a future agent with zero context of this conversation
+follows it:
 - Imperative, specific, testable. Name the trigger condition, not just the
   behavior: "When X, do Y" beats "Prefer Y".
 - Short. A rule is one to three sentences; a skill step a few lines. Add a

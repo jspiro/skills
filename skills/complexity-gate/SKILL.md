@@ -92,8 +92,9 @@ shallow PR-merge checkout can't compute the merge-base diff):
   in a function you modified is a must-fix.
 - **When the gate fires on a function you did NOT modify** (it is
   file-scoped, so touching any line surfaces a file's legacy offenders):
-  decompose it now; the fix is usually minutes. Never `eslint-disable` to
-  get green without the user's explicit OK, presented with the fix cost.
+  decompose it now; the fix is usually minutes. An `eslint-disable` is a
+  decision for the user, presented with the fix cost, never a way to get
+  green.
 - **Legacy repos**: over-cap functions the gate hasn't surfaced are out of
   scope until touched.
 

@@ -17,7 +17,7 @@ manifests, or release automation. Keep it lightweight.
   hunk level per `git-prefs`.
 - `~/.claude/skills/<name>` entries for these skills are symlinks into this
   clone — editing a skill here is live immediately. After editing, propose
-  a commit+push (diff-reviewed, per above) and wait for approval; never
+  a commit+push (diff-reviewed, per `git-prefs`) and wait for approval; never
   run them unasked.
 - Keep committed content generic (no personal emails, hosts, or company
   references); personal detail may live in the working tree uncommitted.

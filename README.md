@@ -42,9 +42,11 @@ guardrail exists that doesn't.
 
 You correct the agent, it fixes the one instance, and it makes the same
 mistake next session. This skill turns the correction into a persisted
-rule: it confirms its read of the lesson with you, writes the rule to the
-right CLAUDE.md tier (or a skill plus a pointer when the lesson is big or
-situational), red-teams the written rule, then fixes the original work.
+rule: it confirms its read of the lesson with you, prefers a static check
+(permission rule, hook, lint, CI) when one can enforce it, otherwise writes
+the rule to the right CLAUDE.md tier (or a skill plus a pointer when the
+lesson is big or situational), red-teams the written rule, then fixes the
+original work.
 
 Fires on corrective feedback ("no, I wanted...", "next time do X"), or
 explicitly:
@@ -96,8 +98,7 @@ Caps cyclomatic complexity at ≤ 8 for every function written or
 modified, enforced by the agent as it writes and backed by lint. The
 design is a two-entry-point split: a whole-repo advisory inventory and a
 changed-files gate for CI, so PRs fail only on complexity they touched.
-Includes a decomposition playbook and a `crap-score` audit recipe. Never
-`eslint-disable` to get green without explicit sign-off.
+Includes a decomposition playbook and a `crap-score` audit recipe.
 
 ### [`code-comments`](./skills/code-comments/SKILL.md)
 
