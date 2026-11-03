@@ -21,9 +21,9 @@ Using the CLAUDE.md as-is? Install everything it references:
 ```bash
 # The skills in this repo (they cross-reference each other — install together)
 npx skills@latest add jspiro/skills \
-  --skill internalize --skill git-prefs --skill background-tasks \
-  --skill mutation-testing --skill complexity-gate --skill code-comments \
-  --skill repo-quality-sweep -g
+  --skill internalize --skill prompting-prefs --skill git-prefs \
+  --skill background-tasks --skill mutation-testing --skill complexity-gate \
+  --skill code-comments --skill repo-quality-sweep -g
 
 # The mattpocock/skills my CLAUDE.md references
 npx skills@latest add mattpocock/skills \
@@ -42,9 +42,11 @@ guardrail exists that doesn't.
 
 You correct the agent, it fixes the one instance, and it makes the same
 mistake next session. This skill turns the correction into a persisted
-rule: it confirms its read of the lesson with you, writes the rule to the
-right CLAUDE.md tier (or a skill plus a pointer when the lesson is big or
-situational), red-teams the written rule, then fixes the original work.
+rule: it confirms its read of the lesson with you, prefers a static check
+(permission rule, hook, lint, CI) when one can enforce it, otherwise writes
+the rule to the right CLAUDE.md tier (or a skill plus a pointer when the
+lesson is big or situational), red-teams the written rule, then fixes the
+original work.
 
 Fires on corrective feedback ("no, I wanted...", "next time do X"), or
 explicitly:
@@ -52,6 +54,14 @@ explicitly:
 ```
 /internalize stop putting summary tables in every response
 ```
+
+### [`prompting-prefs`](./skills/prompting-prefs/SKILL.md)
+
+How rules, skills, CLAUDE.md entries, and agent prompts get written:
+plain contextual language, say what rather than why, rules worded so they
+imply their reason, static checks before prose, and where a rule lives
+given its context cost. `internalize` loads it when it writes a rule; it
+also fires on any skill or CLAUDE.md edit.
 
 ### [`git-prefs`](./skills/git-prefs/SKILL.md)
 

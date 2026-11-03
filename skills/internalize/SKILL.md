@@ -1,13 +1,14 @@
 ---
 name: internalize
-description: Turn user corrective feedback into a durable rule — in the right CLAUDE.md tier, or a skill with a CLAUDE.md pointer when the lesson is big or situational — then address the feedback. Use when the user corrects how Claude worked ("no, I wanted...", "don't do that", "that's not what I asked", "next time do X"), gives a preference meant to apply going forward, or invokes /internalize. Not for one-off task tweaks with no future relevance, and not for session-summary CLAUDE.md maintenance (use revise-claude-md for that).
+description: Turn user corrective feedback into a durable rule — in the right CLAUDE.md tier, or a skill with a CLAUDE.md pointer when the lesson is situational — then address the feedback. Use when the user corrects how Claude worked ("no, I wanted...", "don't do that", "that's not what I asked", "next time do X"), gives a preference meant to apply going forward, or invokes /internalize. Not for one-off task tweaks with no future relevance, and not for session-summary CLAUDE.md maintenance (use revise-claude-md for that).
 ---
 
 # Internalize Feedback
 
 When the user says you did something differently than they wanted, extract the
 right lesson, persist it where it will actually prevent a repeat, then fix the
-work. Order: **Q&A → propose → persist → red-team → summarize → fix**.
+work. Order: **Q&A → check over prose → destination → propose → red-team →
+summarize → fix**.
 
 ## 0. Identify the feedback
 
@@ -39,48 +40,40 @@ preview the only place a proposal's text appears; previews are for
 comparing genuinely different variants. Iterate until the user confirms
 your read.
 
-## 2. Propose — state the rule
+## 1b. Prefer a check over prose
 
-Only now restate the lesson as the rule you'd write: show the exact text in
-the message body (a fenced block), name the destination, then collect
-approve/revise with AskUserQuestion (previews only for competing variants). Do not persist until the user confirms the lesson is stated
-right — a wrong generalization recorded is worse than none. If the
-correction contradicts an existing CLAUDE.md rule, surface the conflict and
-ask which wins.
+If a permission rule, hook, lint rule, pre-commit, test, or CI gate can
+enforce the lesson cheaply and reliably, build that instead; the
+`prompting-prefs` skill says how to document it. Skip this when the check
+would be flaky or larger than a few dozen lines.
 
-## 3. Persist — write the rule
-
-**Choose the destination:**
+## 2. Choose the destination
 
 | Lesson is about | Destination |
 |---|---|
 | Personal preference, workflow, communication style — true in any repo | `~/.claude/CLAUDE.md` |
 | This repo's conventions, architecture, process | `<repo>/CLAUDE.md` |
 | One domain within the repo (tests, prompts, e2e, ...) that has its own CLAUDE.md | that subdirectory's `CLAUDE.md` |
-| Substantial or situational knowledge — a procedure, a rule set, anything over ~10 lines, or knowledge only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
-
-Keep a short rule in CLAUDE.md when it must apply at a moment no skill
-would be loaded. When the destination is a skill, the pointer line names
-the trigger condition ("for any git work, follow the `git-prefs` skill").
+| Situational knowledge — a procedure, a rule set, anything only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
+| Situational, but shorter to state than a skill pointer | CLAUDE.md, grouped with similar items; move the group into a skill once that saves context |
 
 If genuinely ambiguous (e.g. "is this preference personal or team-wide?"),
 include a destination question in the step-1 interview instead of guessing.
 
-**Before adding, check for an existing rule:**
-- Grep the candidate file(s) for related rules. If one exists and was violated,
-  don't duplicate it — reword/strengthen it so it would have prevented this
-  instance, and note that the old wording failed.
-- Respect the target file's structure: add to the matching existing section
-  (e.g. a project file's agent-guidance or code-style section) rather than
-  appending to the bottom.
+Grep the candidate file(s) for a related rule. If one exists and was
+violated, reword or strengthen it so it would have prevented this instance,
+and note that the old wording failed.
 
-**Write the rule so a future agent with zero context of this conversation
-follows it:**
-- Imperative, specific, testable. Name the trigger condition, not just the
-  behavior: "When X, do Y" beats "Prefer Y".
-- Include a one-line WHY when the rule looks arbitrary without it.
-- Include a concrete example if the rule is easy to misread.
-- No references to "this conversation", today's date, or the specific incident.
+## 3. Propose the edit
+
+Name the destination in one line, then make the edit with Write or Edit so
+the user approves the diff itself. If the user declines, revise and
+propose again; do not record the rule anywhere else. Use AskUserQuestion
+only to choose between competing variants. If the correction contradicts
+an existing rule, show the conflict and ask which wins.
+
+Write the rule per the `prompting-prefs` skill, so a future agent with zero
+context of this conversation follows it.
 
 ## 4. Red-team — second pass on the written rule
 

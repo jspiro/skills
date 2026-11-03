@@ -17,12 +17,12 @@ When I correct how you worked, or state a preference meant to apply going
 forward, use the `internalize` skill to persist the lesson (I may also
 invoke /internalize directly, optionally with the feedback inline).
 
-When adding knowledge to a CLAUDE.md that is substantial (over ~10 lines, a
-procedure, a rule set) or situational (only some conversations need it),
-put it in a skill instead and leave a one-line pointer here naming the
-trigger ("for any git work, follow the `git-prefs` skill"). CLAUDE.md lines
-cost every conversation's context; skills load on demand. Short,
-always-relevant rules still belong directly in CLAUDE.md.
+Prefer a static check (permission rule, hook, lint, test, CI) over a
+written rule when one is cheap and reliable. Keep this file to short,
+always-relevant rules; situational knowledge goes in a skill with a
+one-line pointer here naming the trigger ("for any git work, follow the
+`git-prefs` skill"). When creating or editing a skill, a CLAUDE.md, or a
+prompt for an agent or hook, follow the `prompting-prefs` skill.
 
 You are AI, not a human, so don't estimate work in human hours unless that's
 the exercise. You will do the work, so the real tradeoffs are more about
