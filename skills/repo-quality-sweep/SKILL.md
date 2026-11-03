@@ -1,12 +1,12 @@
 ---
 name: repo-quality-sweep
-description: Compound process skill that applies the quality skills (DRY, complexity-gate, code-comments, mutation-testing) across an entire repo as a series of small behavior-preserving PRs. Use when asked to clean up / tidy / harden a codebase, execute a documentation-or-refactor sweep issue, or bring legacy code in line with current standards.
+description: Compound process skill that applies the quality skills (DRY, complexity-gate, code-prefs, mutation-testing) across an entire repo as a series of small behavior-preserving PRs. Use when asked to clean up / tidy / harden a codebase, execute a documentation-or-refactor sweep issue, or bring legacy code in line with current standards.
 ---
 
 # Repo Quality Sweep
 
 Composes the atomic skills — load them, don't restate them:
-`complexity-gate`, `code-comments`, `mutation-testing` (and `git-prefs`
+`complexity-gate`, `code-prefs`, `mutation-testing` (and `git-prefs`
 for the PR mechanics). This skill only adds the repo-level loop and the
 per-file pass order.
 
@@ -45,7 +45,7 @@ polish comments on code about to move):
    individually-documented helpers (`complexity-gate` skill). Extract at
    natural seams (a try/catch block, a mode branch) — helpers should have
    contracts worth documenting, not arbitrary halves.
-3. **Comments/docstrings**: apply the `code-comments` skill — add missing
+3. **Comments/docstrings**: apply the `code-prefs` skill — add missing
    behavior-first docstrings (functions, interfaces, members), delete
    provenance/reasoning narration, wrap at 100.
 4. **Verify**: typecheck + full tests green; complexity lint clean on the
