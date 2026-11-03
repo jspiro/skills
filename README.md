@@ -21,9 +21,9 @@ Using the CLAUDE.md as-is? Install everything it references:
 ```bash
 # The skills in this repo (they cross-reference each other — install together)
 npx skills@latest add jspiro/skills \
-  --skill internalize --skill git-prefs --skill background-tasks \
-  --skill mutation-testing --skill complexity-gate --skill code-comments \
-  --skill repo-quality-sweep -g
+  --skill internalize --skill prompting-prefs --skill git-prefs \
+  --skill code-prefs --skill background-tasks --skill mutation-testing \
+  --skill complexity-gate --skill repo-quality-sweep -g
 
 # The mattpocock/skills my CLAUDE.md references
 npx skills@latest add mattpocock/skills \
@@ -55,6 +55,14 @@ explicitly:
 /internalize stop putting summary tables in every response
 ```
 
+### [`prompting-prefs`](./skills/prompting-prefs/SKILL.md)
+
+How rules, skills, CLAUDE.md entries, and agent prompts get written:
+plain contextual language, say what rather than why, rules worded so they
+imply their reason, static checks before prose, and where a rule lives
+given its context cost. `internalize` loads it when it writes a rule; it
+also fires on any skill or CLAUDE.md edit.
+
 ### [`git-prefs`](./skills/git-prefs/SKILL.md)
 
 Git preferences belong in a skill that loads only for git work, not in a
@@ -79,7 +87,7 @@ Four skills that keep generated code honest, each useful alone and wired
 to fire at a lifecycle moment by a pointer line in
 [`examples/CLAUDE.md`](./examples/CLAUDE.md): `complexity-gate` while
 writing, `mutation-testing` after tests are green and before review,
-`code-comments` as the comment pass, and `repo-quality-sweep` to retrofit
+`code-prefs` as the comment pass, and `repo-quality-sweep` to retrofit
 all of it onto a legacy repo. They ship reference configs so every repo
 gets the identical setup.
 
@@ -100,14 +108,15 @@ design is a two-entry-point split: a whole-repo advisory inventory and a
 changed-files gate for CI, so PRs fail only on complexity they touched.
 Includes a decomposition playbook and a `crap-score` audit recipe.
 
-### [`code-comments`](./skills/code-comments/SKILL.md)
+### [`code-prefs`](./skills/code-prefs/SKILL.md)
 
-Agents narrate reasoning into comments and leave fields like
-`corrected: boolean` undocumented. This skill holds the JS/TS specifics
-on top of the core policy (comments state only what the code cannot
-show; docstrings lead with what the function does): JSDoc/TSDoc, member
-documentation, directive comments, TODO hygiene. Apply it while writing
-and as the comment pass of a cleanup, after refactoring, never before.
+Coding preferences the way `git-prefs` holds git ones: comments state
+only what the code cannot show, docstrings lead with what the function
+does, members like `corrected: boolean` get documented, language features
+beat comments, library code beats custom code, plus JS/TS specifics
+(JSDoc/TSDoc, directive comments, TODO hygiene) and file hygiene. Apply
+it while writing and as the comment pass of a cleanup, after refactoring,
+never before.
 
 ### [`repo-quality-sweep`](./skills/repo-quality-sweep/SKILL.md)
 

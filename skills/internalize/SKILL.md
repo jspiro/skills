@@ -42,10 +42,9 @@ your read.
 ## 1b. Prefer a check over prose
 
 If a permission rule, hook, lint rule, pre-commit, test, or CI gate can
-enforce the lesson cheaply and reliably, build that instead. Document the
-check where it lives (script header, README). Leave a one-line pointer in
-CLAUDE.md unless the check fires on its own (a hook needs none). Skip this when the check would be
-flaky or larger than a few dozen lines.
+enforce the lesson cheaply and reliably, build that instead; the
+`prompting-prefs` skill says how to document it. Skip this when the check
+would be flaky or larger than a few dozen lines.
 
 ## 2. Choose the destination
 
@@ -57,20 +56,12 @@ flaky or larger than a few dozen lines.
 | Situational knowledge — a procedure, a rule set, anything only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
 | Situational, but shorter to state than a skill pointer | CLAUDE.md, grouped with similar items; move the group into a skill once that saves context |
 
-Keep a short rule in CLAUDE.md when it must apply at a moment no skill
-would be loaded. When the destination is a skill, the pointer line names
-the trigger condition ("for any git work, follow the `git-prefs` skill").
-
 If genuinely ambiguous (e.g. "is this preference personal or team-wide?"),
 include a destination question in the step-1 interview instead of guessing.
 
-**Before adding, check for an existing rule:**
-- Grep the candidate file(s) for related rules. If one exists and was violated,
-  don't duplicate it — reword/strengthen it so it would have prevented this
-  instance, and note that the old wording failed.
-- Respect the target file's structure: add to the matching existing section
-  (e.g. a project file's agent-guidance or code-style section) rather than
-  appending to the bottom.
+Grep the candidate file(s) for a related rule. If one exists and was
+violated, reword or strengthen it so it would have prevented this instance,
+and note that the old wording failed.
 
 ## 3. Propose the edit
 
@@ -80,16 +71,8 @@ propose again; do not record the rule anywhere else. Use AskUserQuestion
 only to choose between competing variants. If the correction contradicts
 an existing rule, show the conflict and ask which wins.
 
-Write the rule so a future agent with zero context of this conversation
-follows it:
-- Imperative, specific, testable. Name the trigger condition, not just the
-  behavior: "When X, do Y" beats "Prefer Y". Use RFC 2119 terms (MUST,
-  MUST NOT, SHOULD, MAY).
-- Plain, precise words. No metaphors or loaded terms.
-- Say what to do, not why. Add a reason only when the goal cannot be
-  stated as an instruction; add an example only where the rule is easy to
-  misread. A rule is one to three sentences; a skill step a few lines.
-- No references to "this conversation", today's date, or the specific incident.
+Write the rule per the `prompting-prefs` skill, so a future agent with zero
+context of this conversation follows it.
 
 ## 4. Red-team — second pass on the written rule
 
