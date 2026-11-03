@@ -33,16 +33,11 @@ user as a question and let them correct it. Cover, in order:
 - **Whether a rule is warranted at all** — a one-off may not need
   persisting.
 
-Present your read in the message text first — the proposal, what stays
-and what goes, and where it lands — then call AskUserQuestion to collect
-the answer. The question itself is one short line and its options are
-labels, not the place the proposal appears for the first time; a question
-that has to carry the whole read is the overload this phase exists to
-avoid. Option `preview` blocks are for single-select questions
-whose options carry genuinely different texts to compare (variant A vs B);
-never make a preview the only place a single proposal's text appears — a
-question about text the user cannot see is the failure this phase
-prevents. Iterate until the user confirms your read matches theirs.
+Present your read in the message text first, then call AskUserQuestion
+with a one-line question and label options. Never make an option or
+preview the only place a proposal's text appears; previews are for
+comparing genuinely different variants. Iterate until the user confirms
+your read.
 
 ## 2. Propose — state the rule
 
@@ -64,12 +59,9 @@ ask which wins.
 | One domain within the repo (tests, prompts, e2e, ...) that has its own CLAUDE.md | that subdirectory's `CLAUDE.md` |
 | Substantial or situational knowledge — a procedure, a rule set, anything over ~10 lines, or knowledge only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
 
-CLAUDE.md lines load into every conversation; a skill loads only when
-triggered. Short, always-relevant rules stay in CLAUDE.md; bulk and
-situational scope go to a skill — but never exile a two-line rule to a skill,
-where it won't be loaded at the moment it applies. When the destination is a
-skill, the pointer line is what makes it reachable: name the trigger
-condition in it ("for any git work, follow the `git-prefs` skill").
+Keep a short rule in CLAUDE.md when it must apply at a moment no skill
+would be loaded. When the destination is a skill, the pointer line names
+the trigger condition ("for any git work, follow the `git-prefs` skill").
 
 If genuinely ambiguous (e.g. "is this preference personal or team-wide?"),
 include a destination question in the step-1 interview instead of guessing.
@@ -104,12 +96,9 @@ situation (and near-variants of it):
   well-meaning agent could follow while still repeating the mistake.
 - **Does it conflict with or duplicate neighboring rules** in the same file, or
   in the other CLAUDE.md tiers?
-- **How could the rule itself backfire?** Imagine situations where following it
-  produces a worse outcome than the original mistake: overcorrection (the rule
-  fires where it shouldn't and blocks good behavior), collateral damage (it
-  fixes this case but degrades an adjacent one), or perverse compliance
-  (satisfying the letter of the rule while defeating its purpose). If the rule
-  is only safe within limits, write the limits into the rule.
+- **How could the rule itself backfire?** Overcorrection, collateral damage
+  to an adjacent case, or letter-not-spirit compliance. If the rule is only
+  safe within limits, write the limits into it.
 
 Amend the rule to close any gap you find. If closing a gap requires a decision
 only the user can make, ask now rather than papering over it.

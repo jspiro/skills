@@ -66,17 +66,13 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
 ## Coding
 
 - Comments state only what the code cannot show: a non-obvious constraint,
-  subtlety, or trap. Never narrate your reasoning, triage history, or what
-  tool/review prompted a change ("found by mutation testing", "per PR #N
-  review") — that context belongs in the commit message, not the code.
-  Every non-trivial function gets a docstring that leads with what it DOES
-  (input → result); design rationale comes after, if at all. A good name
-  may stand alone only when the arguments are self-describing too. The
-  same bar applies to interfaces/classes and their MEMBERS: document each
-  field unless it's dead clear (a bare `corrected: boolean` says nothing
-  about what was corrected). Put comments above the line they apply to. When in doubt about a line
-  comment, no comment. For JS/TS work, the `code-comments` skill has the
-  JSDoc/TSDoc and directive-comment conventions.
+  subtlety, or trap, placed above the line they apply to. Never narrate
+  your reasoning or what review prompted a change; that belongs in the
+  commit message. Every non-trivial function gets a docstring that leads
+  with what it DOES (a good name alone suffices only when the arguments
+  are self-describing too); every non-obvious field gets a line saying
+  what it holds. When in doubt about a line comment, no comment. For JS/TS
+  work, the `code-comments` skill has the conventions.
 - Custom code is almost always worse than library code.
 - Never suppress a failing quality gate (lint rule, complexity cap, test,
   CI check) to get green — fix the cause, or present the suppression to me
@@ -106,10 +102,8 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
      A permission prompt on such a command can't be retracted and stalls
      the turn until I answer; unattended, the work dies.
 
-- CRITICAL: For dangerous shell scripts and tools (anything that modifies,
-  deletes, or overwrites files), add --dry-run/--no-dry-run BEFORE writing
-  any destructive logic. --dry-run MUST be the default. This is
-  non-negotiable and must be the FIRST thing implemented, not added later.
+- Any tool that modifies, deletes, or overwrites files implements
+  `--dry-run` first, on by default, with `--no-dry-run` to execute.
 - When I report a bug and the project has a testing framework, don't start
   by trying to fix it. Instead, start by writing tests that reproduce the
   bug, commit the tests, then have subagents try to fix the bug and prove it
