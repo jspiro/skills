@@ -91,7 +91,9 @@ shallow PR-merge checkout can't compute the merge-base diff):
   decision for the user, presented with the fix cost, never a way to get
   green.
 - **Legacy repos**: over-cap functions the gate hasn't surfaced are out of
-  scope until touched.
+  scope until touched. The first time the gate fires on legacy code in a
+  repo, ask the user whether to keep decomposing as files are touched or
+  handle the backlog another way.
 
 ## Decomposition playbook
 
