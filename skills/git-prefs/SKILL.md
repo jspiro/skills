@@ -33,25 +33,20 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 - Before `git push`: `git fetch origin` and confirm the current branch tracks a remote.
 - Before any push that will face CI, run every gate the PR runs locally on
   the changed files first (typecheck, tests, lint/complexity, scoped
-  mutation testing when logic changed). CI confirms; it never informs.
+  mutation testing when logic changed).
 
 ## Destructive operations
 
-A delete is a command of its own, in its least destructive form; a
-known-dangerous command waits until the end of the task. The git
-equivalents:
-
-- **Moving a branch with no unique commits onto a ref:** `git merge
-  --ff-only <ref>`, or create a new branch from the ref. `reset --hard` is
-  almost never warranted; when a reset is, `--soft` / `--mixed` keeps the
-  work in the tree.
-- **Local edits are never dropped.** If they must move out of the way,
-  `git stash` and `git stash pop` right after the step that needed the
-  clean tree — a stash is a parking spot, not a hiding place. Never
-  `checkout --`/`restore` away edits you didn't make.
-- **Untracked files:** `git clean -n` to list, then delete the named
-  files; never `clean -fd`.
-- **Remote history:** `--force-with-lease`, feature branches only.
+- To move a branch with no unique commits onto a ref, use `git merge
+  --ff-only <ref>` or create a new branch from the ref. Do not use
+  `reset --hard`; when a reset is needed, use `--soft` or `--mixed`.
+- MUST NOT drop local edits. If they must move out of the way, `git stash`
+  them and `git stash pop` right after the step that needed the clean
+  tree. MUST NOT `checkout --` or `restore` away edits you didn't make.
+- To remove untracked files, run `git clean -n`, then delete the listed
+  files individually. MUST NOT run `clean -fd`.
+- Rewrite remote history only with `--force-with-lease`, only on feature
+  branches.
 
 ## Commits
 
@@ -99,23 +94,30 @@ Check how signing is set up before assuming anything:
 
 ## PR descriptions
 
-Write for someone without code context first, then a tester, then the
-code reviewer:
+In this order:
 
-- **Plain-language summary**: what changes for users ("nothing visible"
-  when true), why now, and the risk with its evidence. No file or
-  function names.
-- **Manual verification**, ahead of technical detail: deployment status
-  (is the branch on staging, and the command if not); one targeted check
-  per changed behaviour, copy-pasteable when it has a mechanical form;
-  then the surfaces to glance at and why a glance is enough.
-- **Length follows risk.** A refactor proven byte-identical gets a
-  one-line glance. Never list what does NOT need testing.
+1. **Summary** in plain language: what changes for users ("nothing
+   visible" when true), why now, and the risk with its evidence. No file
+   or function names.
+2. **Manual verification**, written so a tester can follow it without
+   reading the diff:
+   - Deployment status: whether the branch is on staging, and the command
+     to put it there if not.
+   - One targeted check per behaviour the PR changes. When a check can be
+     run mechanically, give the exact commands to stage the input, observe
+     the result, and restore.
+   - The surfaces to glance at to confirm nothing else broke, and why a
+     glance is enough (for example, tests proving output unchanged).
+3. **Technical detail.**
+
+Keep the verification section proportional to the risk: a refactor proven
+byte-identical needs one line. Do not list what does not need testing.
 
 ## After pushing to a PR
 
-Every push starts a review round; own it until the PR is clean or blocked
-on the user, per the `background-tasks` skill.
+Every push starts a review round. Address findings until the PR is clean,
+per the `background-tasks` skill. When blocked on the user, tell them what
+is blocked and why.
 
 ## Identity (don't override)
 

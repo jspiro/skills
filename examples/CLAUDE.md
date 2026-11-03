@@ -13,17 +13,13 @@ https://github.com/mattpocock/skills; `internalize`, `git-prefs`,
 
 Make plans and responses concise and direct, but don't sacrifice grammar.
 
-When I correct how you worked, or state a preference meant to apply going
-forward, use the `internalize` skill to persist the lesson (I may also
-invoke /internalize directly, optionally with the feedback inline).
-
-Before adding a rule here or to a skill, prefer a static check (permission
-rule, hook, lint, test, CI) when one is cheap and reliable; the
-`internalize` skill has the details. Rules are one to three sentences, not
-manuals. Substantial or situational knowledge goes in a skill, with a
-one-line pointer here naming the trigger ("for any git work, follow the
-`git-prefs` skill"), because CLAUDE.md lines cost every conversation's
-context while skills load on demand.
+Rules here and in skills MUST say what to do, in plain, precise language,
+using RFC 2119 terms (MUST, MUST NOT, SHOULD, MAY) outside prose. State a
+reason only when the goal cannot be stated as an instruction. Prefer a
+static check (permission rule, hook, lint, test, CI) over a written rule
+when one is cheap and reliable. Keep this file to short, always-relevant
+rules; situational knowledge goes in a skill with a pointer in the Skills
+section below.
 
 You are AI, not a human, so don't estimate work in human hours unless that's
 the exercise. You will do the work, so the real tradeoffs are more about
@@ -51,18 +47,8 @@ starting work.
 After completing work, run /code-review and /improve-codebase-architecture
 to look for opportunities to tighten up the code before pushing to a PR.
 
-For any background work you start or wait on (subagents, CI runs, deploys,
-PR reviewer bots, cron jobs), follow the `background-tasks` skill: own the
-lifecycle, verify by artifact, never drop work silently. After any push to
-a PR branch, that skill's PR review loop applies until the latest review
-round is clean or blocked on me.
-
 Whenever we're starting new or undefined work in a codebase, run /triage on
 the available issues.
-
-When asked to clean up, tidy, or harden an existing codebase (DRY,
-complexity, comments, dead code), follow the `repo-quality-sweep` skill —
-it sequences the atomic quality skills into small behavior-preserving PRs.
 
 ## Coding
 
@@ -72,45 +58,40 @@ it sequences the atomic quality skills into small behavior-preserving PRs.
   commit message. Every non-trivial function gets a docstring that leads
   with what it DOES (a good name alone suffices only when the arguments
   are self-describing too); every non-obvious field gets a line saying
-  what it holds. When in doubt about a line comment, no comment. For JS/TS
-  work, the `code-comments` skill has the conventions.
+  what it holds. When in doubt about a line comment, no comment.
 - Custom code is almost always worse than library code.
 - Never suppress a failing quality gate (lint rule, complexity cap, test,
   CI check) to get green — fix the cause, or present the suppression to me
   as a decision with the fix cost attached. A disable comment I didn't
   approve is cheating, not unblocking.
-
-- **Shell commands.** I must be able to judge each one from the
-  permission prompt in a few seconds, or I decline it unread.
-  - One purpose per command, a few lines, no embedded programs. A short
-    related sequence (stage then commit, a pipe) may stay together. Files
-    are created and edited with Write/Edit, not shell.
-  - A check and the action it decides go in separate commands.
-  - A delete is a command of its own, in the least destructive form that
-    works (`rm` over `rm -rf`, per-file over blanket); git: `git-prefs`.
-    Files you created under `/tmp` may be deleted freely.
-  - Before a command that will prompt me, say in a sentence what it does.
-  - A known-dangerous command waits until the end of the task.
-
-- Any script or tool that modifies, deletes, or overwrites files gets
-  `--dry-run`/`--no-dry-run` as the FIRST thing implemented, with dry-run
-  the default. Non-negotiable.
+- Keep cyclomatic complexity ≤ 8 for every function you write or modify.
+- Any tool that modifies, deletes, or overwrites files MUST implement
+  `--dry-run` first, on by default, with `--no-dry-run` to execute.
 - When I report a bug and the project has a testing framework, don't start
   by trying to fix it. Instead, start by writing tests that reproduce the
   bug, commit the tests, then have subagents try to fix the bug and prove it
   with the passing tests.
-- After any refactor, and before merging a PR that touches pure logic,
-  validation, or parsing, follow the `mutation-testing` skill (scoped run on
-  the changed files, after tests are green); also whenever test coverage is
-  in doubt. Skip it for UI/copy/config-only diffs.
-- Keep cyclomatic complexity ≤ 8 for every function you write or modify —
-  the `complexity-gate` skill has the rule's edges and per-ecosystem lint
-  setup (reference implementations included); load it when writing code or
-  setting up a project's linting.
 
-### Source Control
+### Shell commands
 
-For any git work, follow the `git-prefs` skill.
+I MUST be able to judge each command from the permission prompt in a few
+seconds.
+
+- Every Bash call's `description` MUST state the command's purpose in
+  plain words.
+- One purpose per command. A short related sequence (stage then commit, a
+  pipe) MAY share a line. Small embedded programs (a regexp, a short awk)
+  are fine.
+- A check and the action its result decides MUST be separate commands.
+- A destructive step (`rm -rf`, `find -delete`, `git reset --hard`) MUST
+  NOT be buried in a command that also does other things. Run it alone, in
+  the least destructive form that works.
+- Create and edit files with Write/Edit, not shell.
+- Sequence commands that need my approval as late as possible, so the most
+  work completes before the first prompt. Defer cleanup when that doesn't
+  degrade the result.
+- Files you created under `/tmp` MAY be deleted freely. Never move other
+  files to `/tmp` to delete them without a prompt.
 
 ### Linting
 
@@ -121,3 +102,22 @@ For any git work, follow the `git-prefs` skill.
 - Format lines to 100 characters or less.
 - Python should be linted with ruff using practical rules, and formatted
   with black.
+
+## Skills
+
+Load the named skill when its trigger applies:
+
+- `internalize`: when I correct how you worked or state a preference meant
+  to apply going forward (I may also invoke /internalize directly,
+  optionally with the feedback inline).
+- `git-prefs`: any git work.
+- `background-tasks`: any background work you start or wait on (subagents,
+  CI runs, deploys, PR reviewer bots, cron jobs). After any push to a PR
+  branch, its review loop runs until the round is clean or blocked on me.
+- `complexity-gate`: writing code, or setting up a project's linting.
+- `mutation-testing`: after any refactor; before merging a PR that touches
+  pure logic, validation, or parsing; whenever test coverage is in doubt.
+  Skip it for UI/copy/config-only diffs.
+- `code-comments`: JS/TS comment and docstring conventions.
+- `repo-quality-sweep`: when asked to clean up, tidy, or harden an existing
+  codebase (DRY, complexity, comments, dead code).

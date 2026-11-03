@@ -7,8 +7,7 @@ description: Turn user corrective feedback into a durable rule — in the right 
 
 When the user says you did something differently than they wanted, extract the
 right lesson, persist it where it will actually prevent a repeat, then fix the
-work. Order: **Q&A → destination → propose (the edit) → red-team →
-summarize → fix**.
+work. Order: **Q&A → destination → propose → red-team → summarize → fix**.
 
 ## 0. Identify the feedback
 
@@ -43,9 +42,9 @@ your read.
 ## 1b. Prefer a check over prose
 
 If a permission rule, hook, lint rule, pre-commit, test, or CI gate can
-enforce the lesson cheaply and reliably, build that instead and keep the
-prose to a one-line pointer. Document the check where it lives (script
-header, README); CLAUDE.md at most points there. Skip this when the check would be
+enforce the lesson cheaply and reliably, build that instead. Document the
+check where it lives (script header, README). Leave a one-line pointer in
+CLAUDE.md unless the check fires on its own (a hook needs none). Skip this when the check would be
 flaky or larger than a few dozen lines.
 
 ## 2. Choose the destination
@@ -55,11 +54,12 @@ flaky or larger than a few dozen lines.
 | Personal preference, workflow, communication style — true in any repo | `~/.claude/CLAUDE.md` |
 | This repo's conventions, architecture, process | `<repo>/CLAUDE.md` |
 | One domain within the repo (tests, prompts, e2e, ...) that has its own CLAUDE.md | that subdirectory's `CLAUDE.md` |
-| Substantial or situational knowledge — a procedure, a rule set, anything over ~10 lines, or knowledge only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
+| Situational knowledge — a procedure, a rule set, anything only some conversations need | a skill (new, or extend an existing one), plus a one-line pointer in the CLAUDE.md tier above |
+| Situational, but shorter to state than a skill pointer | CLAUDE.md, grouped with similar items; move the group into a skill once that saves context |
 
-Never exile a two-line rule to a skill, where it won't be loaded when it
-applies. When the destination is a skill, the pointer line names the
-trigger condition ("for any git work, follow the `git-prefs` skill").
+Keep a short rule in CLAUDE.md when it must apply at a moment no skill
+would be loaded. When the destination is a skill, the pointer line names
+the trigger condition ("for any git work, follow the `git-prefs` skill").
 
 If genuinely ambiguous (e.g. "is this preference personal or team-wide?"),
 include a destination question in the step-1 interview instead of guessing.
@@ -72,22 +72,23 @@ include a destination question in the step-1 interview instead of guessing.
   (e.g. a project file's agent-guidance or code-style section) rather than
   appending to the bottom.
 
-## 3. Propose — the edit is the proposal
+## 3. Propose the edit
 
-Name the destination in one line, then issue the Edit call so the diff is
-what the user approves. A declined diff is recorded nowhere: a wrong
-generalization persisted is worse than none, so revise and re-propose. Use
-AskUserQuestion only to choose between competing variants. If the
-correction contradicts an existing rule, surface the conflict and ask
-which wins.
+Name the destination in one line, then make the edit with Write or Edit so
+the user approves the diff itself. If the user declines, revise and
+propose again; do not record the rule anywhere else. Use AskUserQuestion
+only to choose between competing variants. If the correction contradicts
+an existing rule, show the conflict and ask which wins.
 
 Write the rule so a future agent with zero context of this conversation
 follows it:
 - Imperative, specific, testable. Name the trigger condition, not just the
-  behavior: "When X, do Y" beats "Prefer Y".
-- Short. A rule is one to three sentences; a skill step a few lines. Add a
-  one-line WHY or an example only where the rule looks arbitrary or is
-  easy to misread. Steer, don't write a manual.
+  behavior: "When X, do Y" beats "Prefer Y". Use RFC 2119 terms (MUST,
+  MUST NOT, SHOULD, MAY).
+- Plain, precise words. No metaphors or loaded terms.
+- Say what to do, not why. Add a reason only when the goal cannot be
+  stated as an instruction; add an example only where the rule is easy to
+  misread. A rule is one to three sentences; a skill step a few lines.
 - No references to "this conversation", today's date, or the specific incident.
 
 ## 4. Red-team — second pass on the written rule

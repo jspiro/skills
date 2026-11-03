@@ -10,16 +10,11 @@ Decompose into named helpers instead of nesting further. When a function
 you must touch already exceeds 8, don't grow it — extract as you go.
 Legacy functions you aren't touching are not your problem that day.
 
-## CRAP, for orientation
+## CRAP audit
 
 CRAP (Change Risk Anti-Patterns) = `comp² × (1 − coverage)³ + comp`;
-alarm at ≈ 30. Complex AND untested is where change risk lives. This gate
-holds `comp` at ≤ 8 (CRAP ≤ 72 even uncovered); `mutation-testing` keeps
-the coverage factor honest.
-
-ESLint computes no coverage, so the CRAP report comes from `crap-score`
-(npm, ahilke/js-crap-score, works against Vitest v8 coverage). It is a
-periodic audit ranking the riskiest functions, not a per-PR gate.
+alarm at > 30. Run it as a periodic audit, not a per-PR gate, with
+`crap-score` (npm, ahilke/js-crap-score) over Vitest v8 coverage.
 Package script `crap`:
 
 ```
@@ -96,7 +91,9 @@ shallow PR-merge checkout can't compute the merge-base diff):
   decision for the user, presented with the fix cost, never a way to get
   green.
 - **Legacy repos**: over-cap functions the gate hasn't surfaced are out of
-  scope until touched.
+  scope until touched. The first time the gate fires on legacy code in a
+  repo, ask the user whether to keep decomposing as files are touched or
+  handle the backlog another way.
 
 ## Decomposition playbook
 
