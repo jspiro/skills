@@ -8,7 +8,7 @@ description: How to write rules, skills, CLAUDE.md entries, and agent prompts â€
 ## Say what, not why
 
 - State the instruction. Add a reason only when the goal cannot be stated
-  as an instruction, or the rule is easy to misread.
+  as an instruction; add an example only when the rule is easy to misread.
 - Word a rule so it implies its reason ("run a destructive command alone
   so the prompt shows only it") rather than adding a rationale sentence.
   When a principle serves several rules, state it here, not in each rule.
@@ -44,7 +44,5 @@ description: How to write rules, skills, CLAUDE.md entries, and agent prompts â€
 
 ## Structure
 
-- Before adding a rule, grep the target for an existing one; strengthen it
-  rather than duplicating.
 - Add to the matching section of the target file rather than appending to
   the bottom.

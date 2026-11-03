@@ -44,11 +44,6 @@ description: The user's coding preferences — comments and docstrings in any la
 ## Code
 
 - Custom code is almost always worse than library code.
-- Keep cyclomatic complexity ≤ 8 per function; the `complexity-gate` skill
-  has the edges and lint setup.
-
-## Files and linting
-
 - Run the linter on every script you write before running it.
-- Text files end with a newline and carry no trailing whitespace. Lines,
-  including comments and docstrings, wrap at 100 columns.
+- Comments and docstrings use the full 100-column width rather than
+  wrapping early.

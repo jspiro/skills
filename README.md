@@ -88,8 +88,8 @@ to fire at a lifecycle moment by a pointer line in
 [`examples/CLAUDE.md`](./examples/CLAUDE.md): `complexity-gate` while
 writing, `mutation-testing` after tests are green and before review,
 `code-prefs` as the comment pass, and `repo-quality-sweep` to retrofit
-all of it onto a legacy repo. They ship reference configs so every repo
-gets the identical setup.
+all of it onto a legacy repo. `mutation-testing` and `complexity-gate`
+ship reference configs so every repo gets the identical setup.
 
 ### [`mutation-testing`](./skills/mutation-testing/SKILL.md)
 

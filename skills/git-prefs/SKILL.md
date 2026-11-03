@@ -15,8 +15,7 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 - Where branch work happens depends on where the changes are:
   - **Starting NEW work**: use a git worktree (honoring the repo's
     convention, e.g. `.worktrees/`) and leave the primary checkout on its
-    default branch — other sessions may share the primary, and a branch
-    switch underneath them lands their commits on the wrong branch.
+    default branch; other sessions may be using it.
   - **Changes already in the primary working tree**: ask whether to move
     them into a worktree branch or check out a branch in the primary and
     commit in place. Never copy them — the same change in two places means
@@ -40,11 +39,11 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 - To move a branch with no unique commits onto a ref, use `git merge
   --ff-only <ref>` or create a new branch from the ref. Do not use
   `reset --hard`; when a reset is needed, use `--soft` or `--mixed`.
-- MUST NOT drop local edits. If they must move out of the way, `git stash`
+- Never drop local edits. If they must move out of the way, `git stash`
   them and `git stash pop` right after the step that needed the clean
-  tree. MUST NOT `checkout --` or `restore` away edits you didn't make.
+  tree. Never `checkout --` or `restore` away edits you didn't make.
 - To remove untracked files, run `git clean -n`, then delete the listed
-  files individually. MUST NOT run `clean -fd`.
+  files individually. Never run `clean -fd`.
 - Rewrite remote history only with `--force-with-lease`, only on feature
   branches.
 

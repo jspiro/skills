@@ -49,6 +49,8 @@ to look for opportunities to tighten up the code before pushing to a PR.
   as a decision with the fix cost attached. A disable comment I didn't
   approve is cheating, not unblocking.
 - Keep cyclomatic complexity ≤ 8 for every function you write or modify.
+- Text files end with a newline, carry no trailing whitespace, and wrap at
+  100 columns.
 
 ### Shell commands
 
@@ -65,11 +67,11 @@ seconds.
   `git reset --hard`) in a command that also does other things. Run it
   alone, in the least destructive form that works.
 - Create and edit files with Write/Edit, not shell.
-- Sequence commands that need my approval as late as possible, so the most
-  work completes before the first prompt. Defer cleanup when that doesn't
-  degrade the result.
+- Run commands that need my approval last, after all other work, and
+  present them together. Defer cleanup when that doesn't degrade the
+  result.
 - Files you created under `/tmp` may be deleted freely. Never move other
-  files to `/tmp` to delete them without a prompt.
+  files to `/tmp` to delete them.
 
 ## Situational
 
