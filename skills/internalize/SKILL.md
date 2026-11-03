@@ -1,13 +1,14 @@
 ---
 name: internalize
-description: Turn user corrective feedback into a durable rule — in the right CLAUDE.md tier, or a skill with a CLAUDE.md pointer when the lesson is big or situational — then address the feedback. Use when the user corrects how Claude worked ("no, I wanted...", "don't do that", "that's not what I asked", "next time do X"), gives a preference meant to apply going forward, or invokes /internalize. Not for one-off task tweaks with no future relevance, and not for session-summary CLAUDE.md maintenance (use revise-claude-md for that).
+description: Turn user corrective feedback into a durable rule — in the right CLAUDE.md tier, or a skill with a CLAUDE.md pointer when the lesson is situational — then address the feedback. Use when the user corrects how Claude worked ("no, I wanted...", "don't do that", "that's not what I asked", "next time do X"), gives a preference meant to apply going forward, or invokes /internalize. Not for one-off task tweaks with no future relevance, and not for session-summary CLAUDE.md maintenance (use revise-claude-md for that).
 ---
 
 # Internalize Feedback
 
 When the user says you did something differently than they wanted, extract the
 right lesson, persist it where it will actually prevent a repeat, then fix the
-work. Order: **Q&A → destination → propose → red-team → summarize → fix**.
+work. Order: **Q&A → check over prose → destination → propose → red-team →
+summarize → fix**.
 
 ## 0. Identify the feedback
 
