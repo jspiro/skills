@@ -93,40 +93,30 @@ Check how signing is set up before assuming anything:
 
 ## PR descriptions
 
-A PR body serves two readers before it serves the code reviewer: someone
-without code context deciding whether to care, and someone about to
-smoke-test the change. Both come first; the technical detail follows.
+In this order:
 
-- **Lead with a plain-language summary.** What changes for users (say
-  "nothing visible" when true), why it lands now, and the risk with the
-  evidence behind it. No file names, no function names.
-- **Follow it with a "Manual verification" section a tester can follow
-  without reading the diff**, ahead of the technical sections. In this
-  order:
-  1. **Deployment status** — whether the branch is on staging, and the
-     command to put it there if not.
-  2. **Targeted checks first**, one per behaviour the PR actually changes.
-     Whenever a check has a cheap mechanical form, spell it out to
-     copy-paste: the exact CLI to stage the bad input, the console
-     one-liner and its expected value, the command to restore.
-  3. **Then the areas to glance at** so the rest of the diff didn't break
-     something important — named as surfaces ("one candidate page with
-     several signals: tabs, timeline, one download"), with the reason a
-     glance is enough (tests proving output unchanged, etc.).
-- **Length follows risk.** A refactor proven byte-identical is a
-  one-line glance, not a walkthrough; a checklist longer than the risk
-  statement warrants contradicts it.
-- **Never list what does NOT need testing** — it costs the reader time
-  and says nothing they can act on. Leave untouched paths out entirely.
+1. **Summary** in plain language: what changes for users ("nothing
+   visible" when true), why now, and the risk with its evidence. No file
+   or function names.
+2. **Manual verification**, written so a tester can follow it without
+   reading the diff:
+   - Deployment status: whether the branch is on staging, and the command
+     to put it there if not.
+   - One targeted check per behaviour the PR changes. When a check can be
+     run mechanically, give the exact commands to stage the input, observe
+     the result, and restore.
+   - The surfaces to glance at to confirm nothing else broke, and why a
+     glance is enough (for example, tests proving output unchanged).
+3. **Technical detail.**
+
+Keep the verification section proportional to the risk: a refactor proven
+byte-identical needs one line. Do not list what does not need testing.
 
 ## After pushing to a PR
 
-A push is not the end of the work: every push (initial or follow-up)
-triggers a fresh review round from human or bot reviewers. Own it — stay
-proactive and persistent, addressing findings until the PR is clean or you
-hit a roadblock only the user can clear, then alert them with the state.
-Never let PR work drop silently. Full lifecycle discipline (latency checks,
-verify-by-artifact, recurring watch loops): the `background-tasks` skill.
+Every push starts a review round. Address findings until the PR is clean,
+per the `background-tasks` skill. When blocked on the user, tell them what
+is blocked and why.
 
 ## Identity (don't override)
 
