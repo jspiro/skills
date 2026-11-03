@@ -15,8 +15,7 @@ description: The user's git preferences — applies to commits, amends, cherry-p
 - Where branch work happens depends on where the changes are:
   - **Starting NEW work**: use a git worktree (honoring the repo's
     convention, e.g. `.worktrees/`) and leave the primary checkout on its
-    default branch — other sessions may share the primary, and a branch
-    switch underneath them lands their commits on the wrong branch.
+    default branch; other sessions may be using it.
   - **Changes already in the primary working tree**: ask whether to move
     them into a worktree branch or check out a branch in the primary and
     commit in place. Never copy them — the same change in two places means
